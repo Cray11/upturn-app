@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filament\Admin\Resources\PageContentResource\Pages;
+
+use App\Filament\Admin\Resources\PageContentResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreatePageContent extends CreateRecord
+{
+    protected static string $resource = PageContentResource::class;
+}
