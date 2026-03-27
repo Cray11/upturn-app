@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Application;
 use App\Models\Inquiry;
 use App\Models\JobPosting;
+use App\Models\Testimonial;
 use App\Models\User;
 use App\Notifications\HR\ApplicationReceivedNotification;
 use App\Notifications\Inquiry\InquiryReceivedNotification;
@@ -147,5 +148,30 @@ class PublicFormsTest extends TestCase
             'application_id' => $application->id,
             'stage_name' => 'Application Received',
         ]);
+    }
+
+    public function test_testimonial_form_creates_a_submission_for_admin_review(): void
+    {
+        $response = $this->post(route('testimonials.store'), [
+            'client_name' => 'Jamie Client',
+            'company' => 'Jamie Ventures',
+            'rating' => 5,
+            'content' => 'Upturn helped us stay organized and compliant without adding stress to our team.',
+        ]);
+
+        $response
+            ->assertRedirect(route('home').'#testimonial-form')
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('testimonials', [
+            'client_name' => 'Jamie Client',
+            'company' => 'Jamie Ventures',
+            'rating' => 5,
+            'is_featured' => false,
+        ]);
+
+        $testimonial = Testimonial::query()->latest('id')->firstOrFail();
+
+        $this->assertSame(0, $testimonial->sort_order);
     }
 }

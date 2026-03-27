@@ -42,7 +42,7 @@ class TestimonialResource extends Resource
                 ->default(0),
             Toggle::make('is_featured')
                 ->default(false)
-                ->label('Featured on Homepage'),
+                ->label('Approved for Homepage'),
             Textarea::make('content')
                 ->required()
                 ->rows(4)
@@ -58,10 +58,11 @@ class TestimonialResource extends Resource
                 TextColumn::make('company')->searchable(),
                 TextColumn::make('rating')->sortable(),
                 TextColumn::make('content')->limit(60),
-                ToggleColumn::make('is_featured')->label('Featured'),
+                ToggleColumn::make('is_featured')->label('Approved'),
                 TextColumn::make('sort_order')->sortable()->label('Order'),
+                TextColumn::make('created_at')->since()->label('Submitted'),
             ])
-            ->defaultSort('sort_order')
+            ->defaultSort('created_at', 'desc')
             ->actions([EditAction::make(), DeleteAction::make()])
             ->bulkActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
