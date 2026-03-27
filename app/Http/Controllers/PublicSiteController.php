@@ -21,7 +21,7 @@ class PublicSiteController extends Controller
         return view('pages.home', [
             'contentBlocks' => $this->pageContentMap('home'),
             'services' => $this->transformServices(Service::active()->take(3)->get()),
-            'testimonials' => $this->transformTestimonials(Testimonial::featured()->take(3)->get()),
+            'testimonials' => $this->transformTestimonials(Testimonial::featured()->get()),
             'posts' => $this->transformPosts(Post::published()->latest('published_at')->take(3)->get()),
             'jobPostings' => JobPosting::open()->latest()->take(3)->get(),
             'stats' => [

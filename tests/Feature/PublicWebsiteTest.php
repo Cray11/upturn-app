@@ -63,10 +63,8 @@ class PublicWebsiteTest extends TestCase
             'label' => 'Homepage CMS Label',
             'title' => 'Homepage CMS Hero',
             'description' => 'Homepage hero copy managed from the CMS.',
-            'primary_button_label' => 'Talk to Sales',
+            'primary_button_label' => 'Book Your Free Consultation Now!',
             'primary_button_url' => route('contact'),
-            'secondary_button_label' => 'See Engagements',
-            'secondary_button_url' => route('engagements'),
             'is_published' => true,
         ]);
 
@@ -174,6 +172,14 @@ class PublicWebsiteTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSee('Homepage CMS Hero')
+            ->assertSee('Book Your Free Consultation Now!')
+            ->assertSee('Looking for a Trustworthy Accountant?')
+            ->assertSee("Navigating BIR &amp; Tax compliance problems? We're here to help you!", false)
+            ->assertSee('Leave a Testimonial')
+            ->assertSee('Deliberations')
+            ->assertDontSee('View Case Studies')
+            ->assertDontSee('Plan your next update')
+            ->assertDontSee('Live Business Snapshot')
             ->assertSee($service->title)
             ->assertSee('Acme Trading')
             ->assertSee('Website Launch')

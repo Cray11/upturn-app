@@ -3,6 +3,7 @@
 use App\Http\Controllers\CareerApplicationController;
 use App\Http\Controllers\ContactInquiryController;
 use App\Http\Controllers\CoworkingInquiryController;
+use App\Http\Controllers\PublicTestimonialController;
 use App\Http\Controllers\PublicSiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,7 @@ Route::get('/services', [PublicSiteController::class, 'services'])->name('servic
 Route::get('/engagements', [PublicSiteController::class, 'engagements'])->name('engagements');
 Route::get('/contact', [PublicSiteController::class, 'contact'])->name('contact');
 Route::post('/contact', [ContactInquiryController::class, 'store'])->name('contact.store');
+Route::post('/testimonials', [PublicTestimonialController::class, 'store'])->name('testimonials.store');
 Route::get('/careers', [PublicSiteController::class, 'careers'])->name('careers');
 Route::get('/co-working', [PublicSiteController::class, 'coWorking'])->name('co-working');
 Route::post('/co-working', [CoworkingInquiryController::class, 'store'])->name('co-working.store');
