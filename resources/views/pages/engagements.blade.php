@@ -12,23 +12,9 @@
 @section('content')
   @php
     $fallbackImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80';
-    $heroContent = $contentBlocks->get('hero', [
-        'title' => 'Life at Upturn',
-        'description' => 'Explore the projects, team moments, and culture highlights now managed directly from the engagement content module.',
-        'primary_button_label' => 'Join Our Team',
-        'primary_button_url' => route('careers'),
-    ]);
-    $introContent = $contentBlocks->get('intro', [
-        'label' => 'Milestones',
-        'title' => 'Milestones and Celebrations',
-        'description' => 'A decade of growth, partnership, and steady professional excellence.',
-    ]);
-    $ctaContent = $contentBlocks->get('cta', [
-        'title' => 'Want to partner with us?',
-        'description' => 'Tell us about your business and we will tailor a solution around your goals.',
-        'primary_button_label' => 'Start a Conversation',
-        'primary_button_url' => route('contact'),
-    ]);
+    $heroContent = $pageSections['hero'] ?? [];
+    $introContent = $pageSections['intro'] ?? [];
+    $ctaContent = $pageSections['cta'] ?? [];
   @endphp
 
   <section class="relative flex h-[500px] items-center justify-center overflow-hidden">

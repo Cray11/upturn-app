@@ -2,7 +2,7 @@
   <x-filament::section>
     <div class="flex flex-col gap-6">
       <div>
-        <h2 class="text-base font-semibold text-gray-950 dark:text-white">Admin Shortcuts</h2>
+        <h2 class="text-base font-semibold text-gray-950 dark:text-white">Quick Actions</h2>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
           Jump into the workflows that most directly affect the public website and daily operations.
         </p>

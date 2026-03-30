@@ -17,6 +17,11 @@ class AdminActivityChart extends ChartWidget
 
     protected static ?string $description = 'Monthly trends for leads, bookings, and published content.';
 
+    public static function canView(): bool
+    {
+        return auth()->user()?->hasPortalRole(['admin', 'staff']) ?? false;
+    }
+
     protected function getData(): array
     {
         $months = collect(range(5, 0))

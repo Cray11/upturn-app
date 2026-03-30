@@ -2,26 +2,9 @@
 @section('title', 'Book a Space - Upturn Business Solutions')
 @section('content')
   @php
-    $heroContent = $contentBlocks->get('hero', [
-        'label' => 'Premium Workspaces',
-        'title' => 'Modern Co-working Space',
-        'description' => 'Elevate your productivity in our high-fidelity professional environments designed for business growth and collaborative success.',
-        'image_url' => null,
-        'primary_button_label' => 'Book Now',
-        'primary_button_url' => '#booking-form',
-        'secondary_button_label' => 'Explore Gallery',
-        'secondary_button_url' => '#spaces',
-    ]);
-    $introContent = $contentBlocks->get('intro', [
-        'label' => 'Workspace Options',
-        'title' => 'Our Premium Spaces',
-        'description' => 'Select the environment that best suits your needs.',
-    ]);
-    $ctaContent = $contentBlocks->get('cta', [
-        'label' => 'Booking Request',
-        'title' => 'Reserve Your Space',
-        'description' => 'Fill in the details below and our team will contact you to confirm pricing and availability offline.',
-    ]);
+    $heroContent = $pageSections['hero'] ?? [];
+    $introContent = $pageSections['intro'] ?? [];
+    $ctaContent = $pageSections['cta'] ?? [];
   @endphp
 
   <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-10 lg:py-20">

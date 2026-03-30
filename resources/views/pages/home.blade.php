@@ -2,19 +2,8 @@
 @section('title', 'Upturn Business Solutions | Corporate Financial Excellence')
 @section('content')
   @php
-    $heroContent = $contentBlocks->get('hero', [
-        'label' => 'Trusted By Local Businesses',
-        'title' => 'Building Secure and Tax-Compliant Businesses',
-        'description' => 'Empowering your enterprise with expert financial strategies, meticulous regulatory excellence, and forward-thinking growth solutions.',
-        'image_url' => null,
-        'primary_button_label' => 'Book Your Free Consultation Now!',
-        'primary_button_url' => route('contact'),
-    ]);
-    $introContent = $contentBlocks->get('intro', [
-        'label' => 'Trusted tax and accounting support',
-        'title' => 'Looking for a Trustworthy Accountant?',
-        'description' => 'Work with a team that keeps your bookkeeping, tax compliance, and regulatory requirements organized so you can lead your business with confidence.',
-    ]);
+    $heroContent = $pageSections['hero'] ?? [];
+    $introContent = $pageSections['intro'] ?? [];
     $trustSignals = [
         ['icon' => 'support_agent', 'title' => 'Responsive Support'],
         ['icon' => 'receipt_long', 'title' => 'Tax-Ready Records'],
@@ -315,24 +304,49 @@
 
   <section class="bg-white py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="mb-16 max-w-2xl space-y-4">
-        <h2 class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">Latest Updates</h2>
+      <div class="mb-16 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-2xl space-y-4">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">Latest Updates</h2>
+        </div>
+
+        @if (($publishedPostsCount ?? $posts->count()) > $posts->count())
+          <p class="text-sm font-semibold text-slate-500">
+            Showing the latest {{ $posts->count() }} of {{ $publishedPostsCount }} published updates
+          </p>
+        @endif
       </div>
-      <div class="grid gap-8 md:grid-cols-3">
+      <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
         @forelse ($posts as $post)
-          <article class="overflow-hidden rounded-3xl border border-slate-100 bg-[#f6f6f8]">
-            <div class="h-48 w-full bg-cover bg-center" style="background-image: url('{{ $post['image_url'] ?: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80' }}');"></div>
-            <div class="space-y-4 p-8">
-              <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest text-slate-500">
-                <span>{{ $post['category'] }}</span>
-                <span>{{ $post['published_at_label'] }}</span>
+          @if ($post['link_url'])
+            <a href="{{ $post['link_url'] }}" class="group overflow-hidden rounded-3xl border border-slate-100 bg-[#f6f6f8] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+              <div class="h-48 w-full bg-cover bg-center" style="background-image: url('{{ $post['image_url'] ?: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80' }}');"></div>
+              <div class="space-y-4 p-8">
+                <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest text-slate-500">
+                  <span>{{ $post['category'] }}</span>
+                  <span>{{ $post['published_at_label'] }}</span>
+                </div>
+                <h4 class="text-2xl font-bold text-slate-900 transition-colors group-hover:text-[#1152d4]">{{ $post['title'] }}</h4>
+                <p class="text-sm leading-relaxed text-slate-600">{{ $post['excerpt'] }}</p>
+                <div class="inline-flex items-center gap-2 text-sm font-bold text-[#1152d4]">
+                  Open update <span class="material-symbols-outlined text-sm">north_east</span>
+                </div>
               </div>
-              <h4 class="text-2xl font-bold text-slate-900">{{ $post['title'] }}</h4>
-              <p class="text-sm leading-relaxed text-slate-600">{{ $post['excerpt'] }}</p>
-            </div>
-          </article>
+            </a>
+          @else
+            <article class="overflow-hidden rounded-3xl border border-slate-100 bg-[#f6f6f8]">
+              <div class="h-48 w-full bg-cover bg-center" style="background-image: url('{{ $post['image_url'] ?: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80' }}');"></div>
+              <div class="space-y-4 p-8">
+                <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest text-slate-500">
+                  <span>{{ $post['category'] }}</span>
+                  <span>{{ $post['published_at_label'] }}</span>
+                </div>
+                <h4 class="text-2xl font-bold text-slate-900">{{ $post['title'] }}</h4>
+                <p class="text-sm leading-relaxed text-slate-600">{{ $post['excerpt'] }}</p>
+              </div>
+            </article>
+          @endif
         @empty
-          <div class="md:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
+          <div class="md:col-span-2 xl:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
             <h4 class="text-xl font-bold text-slate-900">No published posts yet.</h4>
             <p class="mt-3 text-slate-600">Once you publish announcements or updates in the CMS, they will appear here.</p>
           </div>

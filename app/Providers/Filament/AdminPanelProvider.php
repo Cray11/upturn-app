@@ -24,6 +24,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName('Upturn Portal')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -34,6 +35,10 @@ class AdminPanelProvider extends PanelProvider
                 in: app_path('Filament/Admin/Resources'),
                 for: 'App\\Filament\\Admin\\Resources'
             )
+            ->discoverResources(
+                in: app_path('Filament/HR/Resources'),
+                for: 'App\\Filament\\HR\\Resources'
+            )
             ->discoverPages(
                 in: app_path('Filament/Admin/Pages'),
                 for: 'App\\Filament\\Admin\\Pages'
@@ -41,6 +46,10 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(
                 in: app_path('Filament/Admin/Widgets'),
                 for: 'App\\Filament\\Admin\\Widgets'
+            )
+            ->discoverWidgets(
+                in: app_path('Filament/HR/Widgets'),
+                for: 'App\\Filament\\HR\\Widgets'
             )
             ->middleware([
                 EncryptCookies::class,

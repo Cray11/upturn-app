@@ -2,26 +2,9 @@
 @section('title', 'Careers - Upturn Business Solutions')
 @section('content')
   @php
-    $heroContent = $contentBlocks->get('hero', [
-        'label' => 'Join Our Team',
-        'title' => 'Shape the Future of Business Solutions',
-        'description' => 'Be part of a growing team of tax and business professionals dedicated to excellence and innovation.',
-        'primary_button_label' => 'View Openings',
-        'primary_button_url' => '#openings',
-        'secondary_button_label' => 'Our Culture',
-        'secondary_button_url' => '#culture',
-    ]);
-    $introContent = $contentBlocks->get('intro', [
-        'label' => 'Inside Upturn',
-        'title' => 'Our Work Culture',
-        'description' => 'Show candidates what it feels like to work with your team, how people grow, and the environment they can expect.',
-    ]);
-    $ctaContent = $contentBlocks->get('cta', [
-        'title' => 'Don\'t see a perfect match?',
-        'description' => 'Browse our open roles and apply to the one that best fits your background.',
-        'primary_button_label' => 'Contact HR',
-        'primary_button_url' => route('contact'),
-    ]);
+    $heroContent = $pageSections['hero'] ?? [];
+    $introContent = $pageSections['intro'] ?? [];
+    $ctaContent = $pageSections['cta'] ?? [];
   @endphp
 
   <div class="px-4 py-8 md:px-20">

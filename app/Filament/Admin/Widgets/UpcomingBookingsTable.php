@@ -16,6 +16,11 @@ class UpcomingBookingsTable extends BaseWidget
 
     protected static ?string $heading = 'Upcoming Bookings';
 
+    public static function canView(): bool
+    {
+        return auth()->user()?->hasPortalRole(['admin', 'staff']) ?? false;
+    }
+
     public function table(Table $table): Table
     {
         return $table

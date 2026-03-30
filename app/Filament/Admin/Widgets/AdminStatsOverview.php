@@ -23,9 +23,14 @@ class AdminStatsOverview extends BaseWidget
 
     protected int | string | array $columnSpan = 'full';
 
+    public static function canView(): bool
+    {
+        return auth()->user()?->hasPortalRole(['admin', 'staff']) ?? false;
+    }
+
     protected function getStats(): array
     {
-        return [
+        $stats = [
             Stat::make('New Inquiries', number_format(Inquiry::query()->where('status', 'new')->count()))
                 ->description(number_format(Inquiry::query()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count()).' received this week')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
@@ -60,14 +65,18 @@ class AdminStatsOverview extends BaseWidget
                 ->chart($this->dailyTrend(fn ($start, $end) => Space::query()->whereBetween('created_at', [$start, $end])->count()))
                 ->color('gray')
                 ->url(SpaceResource::getUrl('index')),
+        ];
 
-            Stat::make('Active Team Members', number_format(User::query()->where('is_active', true)->count()))
+        if (auth()->user()?->hasPortalRole(['admin'])) {
+            $stats[] = Stat::make('Active Team Members', number_format(User::query()->where('is_active', true)->count()))
                 ->description(number_format(User::query()->where('is_active', false)->count()).' currently inactive')
                 ->descriptionIcon('heroicon-m-users')
                 ->chart($this->dailyTrend(fn ($start, $end) => User::query()->whereBetween('created_at', [$start, $end])->count()))
                 ->color('primary')
-                ->url(UserResource::getUrl('index')),
-        ];
+                ->url(UserResource::getUrl('index'));
+        }
+
+        return $stats;
     }
 
     private function dailyTrend(callable $callback): array

@@ -52,8 +52,7 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return match ($panel->getId()) {
-            'admin' => $this->hasPortalRole(['admin', 'staff']),
-            'hr' => $this->hasPortalRole(['admin', 'hr']),
+            'admin' => $this->hasPortalRole(['admin', 'hr', 'staff']),
             default => false,
         };
     }

@@ -2,23 +2,21 @@
 @section('title', 'Contact Us - Upturn Business Solutions')
 @section('content')
   @php
-    $heroContent = $contentBlocks->get('hero', [
-        'title' => 'Contact Us',
-        'description' => 'We are here to help your business upturn and thrive. Reach out to our team of experts for tailored business solutions.',
-    ]);
-    $introContent = $contentBlocks->get('intro', [
-        'label' => 'Let us know what you need',
-        'title' => 'Send us a Message',
-        'description' => 'Use the contact form below for general inquiries, service requests, or career-related questions.',
-    ]);
-    $ctaContent = $contentBlocks->get('cta', [
-        'title' => 'Ready to scale your business?',
-        'description' => 'Let\'s discuss how Upturn can transform your operations.',
-        'primary_button_label' => 'Schedule a Call',
-        'primary_button_url' => route('contact'),
-        'secondary_button_label' => 'View Services',
-        'secondary_button_url' => route('services'),
-    ]);
+    $heroContent = $pageSections['hero'] ?? [];
+    $introContent = $pageSections['intro'] ?? [];
+    $ctaContent = $pageSections['cta'] ?? [];
+    $contactProfile = data_get($companyProfile ?? [], 'contact', []);
+    $contactAddress = data_get($contactProfile, 'address', 'Unit 201-202, C&B Circle Mall, Maysan Road, Malinta, Valenzuela City');
+    $contactPhone = data_get($contactProfile, 'phone', '+63 921 551 4785');
+    $contactEmail = data_get($contactProfile, 'email', 'sales@upturnpartnership.com');
+    $officeHoursWeekday = data_get($contactProfile, 'office_hours.weekday', 'Mon - Fri: 8:00 AM - 5:00 PM');
+    $officeHoursWeekend = data_get($contactProfile, 'office_hours.weekend', 'Sat: 9:00 AM - 12:00 PM');
+    $contactServiceOptions = $serviceOptions->push('Careers')->unique()->values();
+    $requestedService = old('service_interest') ?: request('service');
+    $selectedService = $contactServiceOptions->first(fn (string $option) => $option === $requestedService);
+    $selectedFormDescription = $selectedService
+        ? 'Your selected service is already picked below so your quote request reaches the right team faster.'
+        : ($introContent['description'] ?: 'Use the contact form below for general inquiries, service requests, or career-related questions.');
   @endphp
 
   <div class="w-full bg-slate-100">
@@ -34,10 +32,26 @@
         <div class="space-y-3">
           <p class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $introContent['label'] ?: 'Let us know what you need' }}</p>
           <h3 class="text-2xl font-bold text-slate-900">{{ $introContent['title'] ?: 'Send us a Message' }}</h3>
-          <p class="text-sm leading-relaxed text-slate-600">{{ $introContent['description'] ?: 'Use the contact form below for general inquiries, service requests, or career-related questions.' }}</p>
+          <p class="text-sm leading-relaxed text-slate-600">{{ $selectedFormDescription }}</p>
         </div>
 
-        <form action="{{ route('contact.store') }}" method="POST" class="flex flex-col gap-6">
+        @if ($selectedService)
+          <div class="rounded-2xl border border-[#1152d4]/15 bg-[#1152d4]/5 p-5">
+            <p class="text-xs font-bold uppercase tracking-[0.26em] text-[#1152d4]">Selected Service</p>
+            <div class="mt-3 flex items-center justify-between gap-4">
+              <div>
+                <p class="text-lg font-bold text-slate-900">{{ $selectedService }}</p>
+                <p class="mt-1 text-sm leading-relaxed text-slate-600">The service interest field below has been prefilled from your quote request.</p>
+              </div>
+              <a href="{{ route('services') }}" class="inline-flex items-center gap-2 rounded-full border border-[#1152d4]/15 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#1152d4] transition-all hover:border-[#1152d4]/30 hover:bg-[#1152d4]/5">
+                Back to Services
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+              </a>
+            </div>
+          </div>
+        @endif
+
+        <form id="contact-form" action="{{ route('contact.store') }}" method="POST" class="flex flex-col gap-6">
           @csrf
           <div class="flex flex-col gap-2">
             <label class="text-sm font-semibold text-slate-700">Full Name</label>
@@ -63,8 +77,8 @@
             <label class="text-sm font-semibold text-slate-700">Service Interest</label>
             <select name="service_interest" class="w-full rounded-lg border-slate-300 bg-white p-3 text-slate-900 focus:border-[#1152d4] focus:ring-[#1152d4]">
               <option value="">General Inquiry</option>
-              @foreach ($serviceOptions->push('Careers')->unique()->values() as $option)
-                <option value="{{ $option }}" @selected(old('service_interest') === $option)>{{ $option }}</option>
+              @foreach ($contactServiceOptions as $option)
+                <option value="{{ $option }}" @selected(old('service_interest', $selectedService) === $option)>{{ $option }}</option>
               @endforeach
             </select>
           </div>
@@ -87,7 +101,7 @@
               <span class="material-symbols-outlined">location_on</span>
             </div>
             <h4 class="font-bold text-slate-900">Office Address</h4>
-            <p class="text-sm leading-relaxed text-slate-600">{{ $siteSettings->get('contact_address', 'Unit 1 LJ Building, Maysan Rd, Llenado Compound Malinta, Valenzuela City NCR Philippines') }}</p>
+            <p class="text-sm leading-relaxed text-slate-600">{{ $contactAddress }}</p>
           </div>
           <div class="flex flex-col gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/10 text-[#d4af37]">
@@ -95,7 +109,7 @@
             </div>
             <h4 class="font-bold text-slate-900">Phone Number</h4>
             <p class="text-sm leading-relaxed text-slate-600">
-              <a href="tel:{{ preg_replace('/[^0-9+]/', '', $siteSettings->get('contact_phone', '+63 921 551 4785')) }}" class="hover:text-[#1152d4]">{{ $siteSettings->get('contact_phone', '+63 921 551 4785') }}</a>
+              <a href="tel:{{ preg_replace('/[^0-9+]/', '', $contactPhone) }}" class="hover:text-[#1152d4]">{{ $contactPhone }}</a>
             </p>
           </div>
           <div class="flex flex-col gap-3">
@@ -104,7 +118,7 @@
             </div>
             <h4 class="font-bold text-slate-900">Email Address</h4>
             <p class="text-sm leading-relaxed text-slate-600">
-              <a href="mailto:{{ $siteSettings->get('contact_email', 'upturnph@upturnph.com') }}" class="hover:text-[#1152d4]">{{ $siteSettings->get('contact_email', 'upturnph@upturnph.com') }}</a>
+              <a href="mailto:{{ $contactEmail }}" class="hover:text-[#1152d4]">{{ $contactEmail }}</a>
             </p>
           </div>
           <div class="flex flex-col gap-3">
@@ -112,7 +126,7 @@
               <span class="material-symbols-outlined">schedule</span>
             </div>
             <h4 class="font-bold text-slate-900">Office Hours</h4>
-            <p class="text-sm leading-relaxed text-slate-600">Mon - Fri: 8:00 AM - 5:00 PM<br/>Sat: 9:00 AM - 12:00 PM</p>
+            <p class="text-sm leading-relaxed text-slate-600">{{ $officeHoursWeekday }}<br/>{{ $officeHoursWeekend }}</p>
           </div>
         </div>
 
