@@ -2,24 +2,9 @@
 @section('title', 'Our Services - Upturn Business Solutions')
 @section('content')
   @php
-    $heroContent = $contentBlocks->get('hero', [
-        'label' => 'Our Expertise',
-        'title' => 'Comprehensive Business Solutions',
-        'description' => 'This page is driven by the service and space records managed inside the admin panel.',
-        'image_url' => null,
-    ]);
-    $introContent = $contentBlocks->get('intro', [
-        'label' => 'Service Portfolio',
-        'title' => 'Solutions tailored to each stage of business growth',
-        'description' => 'Use this section to introduce your offer mix before visitors browse the live service records below.',
-    ]);
-    $ctaContent = $contentBlocks->get('cta', [
-        'label' => 'Workspace Inventory',
-        'title' => 'Available Spaces from Booking Management',
-        'description' => 'As spaces are added or marked available in the admin panel, they appear here for public visitors to explore.',
-        'primary_button_label' => 'Book a Space',
-        'primary_button_url' => route('co-working'),
-    ]);
+    $heroContent = $pageSections['hero'] ?? [];
+    $introContent = $pageSections['intro'] ?? [];
+    $ctaContent = $pageSections['cta'] ?? [];
   @endphp
 
   <div class="flex flex-1 justify-center px-4 py-6 md:px-20 md:py-10">
@@ -38,25 +23,37 @@
         <span class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $introContent['label'] ?: 'Service Portfolio' }}</span>
         <h2 class="mt-3 text-3xl font-black text-slate-900 md:text-4xl">{{ $introContent['title'] ?: 'Solutions tailored to each stage of business growth' }}</h2>
         <p class="mt-4 max-w-3xl text-base leading-relaxed text-slate-600">{{ $introContent['description'] ?: 'Use this section to introduce your offer mix before visitors browse the live service records below.' }}</p>
+        <p class="mt-3 text-sm font-medium text-[#1152d4]">Open a preview to see the full service description and image before requesting a quote.</p>
       </div>
 
       <div class="grid grid-cols-1 gap-6 p-0 md:grid-cols-2 md:p-4">
         @forelse ($services as $service)
-          <div class="group flex flex-col items-stretch gap-6 rounded-xl border border-slate-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md md:flex-row">
+          <div
+            class="group flex cursor-pointer flex-col items-stretch gap-6 rounded-[1.75rem] border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:flex-row"
+            data-service-preview-open="{{ $service['slug'] }}"
+            role="button"
+            tabindex="0"
+            aria-label="Preview {{ $service['title'] }}"
+          >
             <div class="flex flex-1 flex-col justify-between gap-4">
               <div class="flex flex-col gap-2">
                 <div class="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-[#1152d4]/10 text-[#1152d4]">
                   <span class="material-symbols-outlined text-3xl">{{ $service['icon'] }}</span>
                 </div>
                 <h3 class="text-xl font-bold leading-tight text-slate-900">{{ $service['title'] }}</h3>
-                <p class="text-sm leading-relaxed text-slate-600">{{ $service['description'] }}</p>
+                <p class="text-sm leading-relaxed text-slate-600">
+                  {{ $service['description'] }}
+                  <span class="font-semibold text-[#1152d4]">...see more</span>
+                </p>
                 @if ($service['price_label'])
                   <p class="text-sm font-semibold text-[#1152d4]">{{ $service['price_label'] }}</p>
                 @endif
               </div>
-              <a href="{{ route('contact') }}" class="flex h-10 w-fit items-center justify-center rounded-lg bg-slate-100 px-6 text-sm font-bold text-[#1152d4] transition-all hover:bg-[#1152d4] hover:text-white group-hover:bg-[#1152d4] group-hover:text-white">
-                Request a Quote
-              </a>
+              <div class="flex flex-col gap-3 sm:flex-row">
+                <a href="{{ $service['quote_url'] }}" data-service-preview-action class="flex h-11 items-center justify-center rounded-lg bg-slate-100 px-6 text-sm font-bold text-[#1152d4] transition-all hover:bg-[#1152d4] hover:text-white">
+                  Request a Quote
+                </a>
+              </div>
             </div>
             <div class="hidden h-40 w-full flex-none rounded-lg bg-cover bg-center bg-no-repeat sm:block md:h-auto md:w-40" style="background-image: url('{{ $service['image_url'] ?: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80' }}');"></div>
           </div>
@@ -67,6 +64,74 @@
           </div>
         @endforelse
       </div>
+
+      @if ($services->isNotEmpty())
+        <div id="service-preview-modal" class="fixed inset-0 z-[80] hidden" aria-hidden="true">
+          <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" data-service-preview-overlay></div>
+          <div class="relative flex min-h-full items-center justify-center p-4 md:p-8">
+            <div class="relative w-full max-w-5xl overflow-hidden rounded-[2rem] bg-white shadow-[0_32px_90px_rgba(15,23,42,0.35)]" data-service-preview-dialog>
+              <button type="button" class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-slate-900/70 text-white transition-colors hover:bg-slate-900" data-service-preview-close aria-label="Close preview">
+                <span class="material-symbols-outlined text-xl">close</span>
+              </button>
+
+              <div class="max-h-[88vh] overflow-y-auto">
+                @foreach ($services as $service)
+                  <div class="hidden" data-service-preview-panel="{{ $service['slug'] }}">
+                    <div class="grid lg:grid-cols-[0.95fr_1.05fr]">
+                      <div class="min-h-[18rem] bg-[#0c1424] lg:min-h-[36rem]">
+                        <div class="h-full w-full bg-cover bg-center" style="background-image: linear-gradient(180deg, rgba(7,17,31,0.16), rgba(7,17,31,0.5)), url('{{ $service['image_url'] ?: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80' }}');"></div>
+                      </div>
+
+                      <div class="p-6 md:p-10">
+                        <p class="text-xs font-bold uppercase tracking-[0.28em] text-[#d4af37]">Service Preview</p>
+                        <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <h3 class="text-3xl font-black tracking-tight text-slate-900 md:text-4xl">{{ $service['title'] }}</h3>
+                          @if ($service['price_label'])
+                            <span class="rounded-full bg-[#1152d4]/10 px-4 py-2 text-sm font-bold text-[#1152d4]">{{ $service['price_label'] }}</span>
+                          @endif
+                        </div>
+
+                        <div class="mt-6 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-6">
+                          <p class="text-sm leading-8 text-slate-600">{!! nl2br(e($service['details'])) !!}</p>
+                        </div>
+
+                        <div class="mt-6 rounded-[1.5rem] border border-[#1152d4]/12 bg-[#f6f9ff] p-6">
+                          <p class="text-xs font-bold uppercase tracking-[0.28em] text-[#1152d4]">What happens next</p>
+                          <div class="mt-4 space-y-3">
+                            <div class="flex items-start gap-3">
+                              <span class="material-symbols-outlined mt-0.5 text-[#1152d4]">check_circle</span>
+                              <p class="text-sm leading-7 text-slate-600">Use the quote button below to carry this exact service into the contact form automatically.</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                              <span class="material-symbols-outlined mt-0.5 text-[#1152d4]">check_circle</span>
+                              <p class="text-sm leading-7 text-slate-600">Add your business details, timeline, and any custom scope notes so the team can respond faster.</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                              <span class="material-symbols-outlined mt-0.5 text-[#1152d4]">check_circle</span>
+                              <p class="text-sm leading-7 text-slate-600">If you just want to ask a question first, you can still open the regular contact form directly.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                          <a href="{{ $service['quote_url'] }}" class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1152d4] px-7 py-4 text-sm font-bold uppercase tracking-[0.16em] text-white transition-all hover:bg-[#0f48bc]">
+                            Request a Quote
+                            <span class="material-symbols-outlined text-base">north_east</span>
+                          </a>
+                          <a href="{{ route('contact') }}#contact-form" class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-7 py-4 text-sm font-bold uppercase tracking-[0.16em] text-slate-700 transition-all hover:border-[#1152d4]/30 hover:bg-[#1152d4]/5 hover:text-[#1152d4]">
+                            Contact Us
+                            <span class="material-symbols-outlined text-base">mail</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </div>
+      @endif
 
       <section class="mt-12 rounded-3xl bg-[#0c1424] px-6 py-10 text-white md:px-10 md:py-14">
         <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -111,3 +176,82 @@
   </div>
 
 @endsection
+
+@push('scripts')
+<script>
+  (function () {
+    const modal = document.getElementById('service-preview-modal');
+    const overlay = modal?.querySelector('[data-service-preview-overlay]');
+    const closeButton = modal?.querySelector('[data-service-preview-close]');
+    const dialog = modal?.querySelector('[data-service-preview-dialog]');
+    const panels = modal?.querySelectorAll('[data-service-preview-panel]');
+    const openButtons = document.querySelectorAll('[data-service-preview-open]');
+
+    if (!modal || !overlay || !closeButton || !dialog || !panels?.length || !openButtons.length) {
+      return;
+    }
+
+    const hidePanels = () => {
+      panels.forEach((panel) => {
+        panel.classList.add('hidden');
+      });
+    };
+
+    const openModal = (serviceSlug) => {
+      const targetPanel = modal.querySelector(`[data-service-preview-panel="${serviceSlug}"]`);
+
+      if (!targetPanel) {
+        return;
+      }
+
+      hidePanels();
+      targetPanel.classList.remove('hidden');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeModal = () => {
+      modal.classList.add('hidden');
+      hidePanels();
+      document.body.style.overflow = '';
+    };
+
+    openButtons.forEach((button) => {
+      button.addEventListener('click', (event) => {
+        if (event.target.closest('[data-service-preview-action]')) {
+          return;
+        }
+
+        openModal(button.getAttribute('data-service-preview-open'));
+      });
+
+      button.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+
+        if (event.target.closest('[data-service-preview-action]')) {
+          return;
+        }
+
+        event.preventDefault();
+        openModal(button.getAttribute('data-service-preview-open'));
+      });
+    });
+
+    closeButton.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => {
+      if (!dialog.contains(event.target)) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+  })();
+</script>
+@endpush

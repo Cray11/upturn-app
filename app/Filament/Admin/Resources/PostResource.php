@@ -64,6 +64,13 @@ class PostResource extends Resource
                 ->directory('posts')
                 ->nullable()
                 ->columnSpanFull(),
+            TextInput::make('link_url')
+                ->label('Destination Link')
+                ->url()
+                ->nullable()
+                ->placeholder('https://example.com/update')
+                ->helperText('Optional link visitors will open when they click this update card.')
+                ->columnSpanFull(),
             RichEditor::make('body')
                 ->required()
                 ->columnSpanFull(),
@@ -82,6 +89,7 @@ class PostResource extends Resource
                 TextColumn::make('title')->searchable()->sortable()->limit(50),
                 TextColumn::make('author.name')->label('Author')->sortable(),
                 TextColumn::make('category')->badge(),
+                TextColumn::make('link_url')->label('Link')->limit(35)->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')->badge()
                     ->color(fn ($state) => match ($state) {
                         'published' => 'success',

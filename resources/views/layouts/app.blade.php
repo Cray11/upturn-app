@@ -15,14 +15,15 @@
   $navShowContact = ! in_array(strtolower(trim($__env->yieldContent('nav_show_contact', 'true'))), ['0', 'false', 'no', 'off'], true);
   $navCtaLabel = trim($__env->yieldContent('nav_cta_label', 'Contact Us')) ?: 'Contact Us';
   $navCtaTarget = trim($__env->yieldContent('nav_cta_target', 'contact')) ?: 'contact';
+  $companyTagline = data_get($companyProfile ?? [], 'tagline', "Providing reliable financial, administrative, and compliance services to help Philippine enterprises thrive in today's competitive landscape.");
 
   $footerVariant = trim($__env->yieldContent('footer_variant', 'default')) ?: 'default';
   $footerCompact = in_array(strtolower(trim($__env->yieldContent('footer_compact', 'false'))), ['1', 'true', 'yes', 'on'], true);
   $footerShowSocials = ! in_array(strtolower(trim($__env->yieldContent('footer_show_socials', 'true'))), ['0', 'false', 'no', 'off'], true);
   $footerShowQuickLinks = ! in_array(strtolower(trim($__env->yieldContent('footer_show_quick_links', 'true'))), ['0', 'false', 'no', 'off'], true);
   $footerShowContact = ! in_array(strtolower(trim($__env->yieldContent('footer_show_contact', 'true'))), ['0', 'false', 'no', 'off'], true);
-  $footerTagline = trim($__env->yieldContent('footer_tagline', "Providing reliable financial, administrative, and compliance services to help Philippine enterprises thrive in today's competitive landscape."))
-      ?: "Providing reliable financial, administrative, and compliance services to help Philippine enterprises thrive in today's competitive landscape.";
+  $footerTagline = trim($__env->yieldContent('footer_tagline', $companyTagline))
+      ?: $companyTagline;
 @endphp
 <body class="overflow-x-hidden bg-[#f6f6f8] text-slate-900">
   @include('components.nav', [

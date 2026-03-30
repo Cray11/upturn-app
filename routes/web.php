@@ -7,6 +7,10 @@ use App\Http\Controllers\PublicTestimonialController;
 use App\Http\Controllers\PublicSiteController;
 use Illuminate\Support\Facades\Route;
 
+Route::redirect('/hr', '/admin');
+Route::get('/hr/{path}', fn () => redirect('/admin'))
+    ->where('path', '.*');
+
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
 Route::get('/about', [PublicSiteController::class, 'about'])->name('about');
 Route::get('/services', [PublicSiteController::class, 'services'])->name('services');

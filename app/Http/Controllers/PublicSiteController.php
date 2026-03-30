@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Engagement;
 use App\Models\JobPosting;
-use App\Models\PageContent;
 use App\Models\Post;
 use App\Models\Service;
 use App\Models\Space;
@@ -19,10 +18,11 @@ class PublicSiteController extends Controller
     public function home(): View
     {
         return view('pages.home', [
-            'contentBlocks' => $this->pageContentMap('home'),
+            'pageSections' => $this->pageSections('home'),
             'services' => $this->transformServices(Service::active()->take(3)->get()),
             'testimonials' => $this->transformTestimonials(Testimonial::featured()->get()),
-            'posts' => $this->transformPosts(Post::published()->latest('published_at')->take(3)->get()),
+            'posts' => $this->transformPosts(Post::published()->latest('published_at')->take(9)->get()),
+            'publishedPostsCount' => Post::published()->count(),
             'jobPostings' => JobPosting::open()->latest()->take(3)->get(),
             'stats' => [
                 ['value' => number_format(Service::active()->count()), 'label' => 'Active Services'],
@@ -36,19 +36,14 @@ class PublicSiteController extends Controller
     public function about(): View
     {
         return view('pages.about', [
-            'contentBlocks' => $this->pageContentMap('about'),
-            'servicesCount' => Service::active()->count(),
-            'spacesCount' => Space::available()->count(),
-            'openRolesCount' => JobPosting::open()->count(),
-            'publishedPostsCount' => Post::published()->count(),
-            'latestPosts' => $this->transformPosts(Post::published()->latest('published_at')->take(3)->get()),
+            'pageSections' => $this->pageSections('about'),
         ]);
     }
 
     public function services(): View
     {
         return view('pages.services', [
-            'contentBlocks' => $this->pageContentMap('services'),
+            'pageSections' => $this->pageSections('services'),
             'services' => $this->transformServices(Service::active()->get()),
             'spaces' => $this->transformSpaces(Space::available()->orderBy('type')->orderBy('name')->get()),
         ]);
@@ -59,7 +54,7 @@ class PublicSiteController extends Controller
         $engagements = Engagement::published()->ordered()->get();
 
         return view('pages.engagements', [
-            'contentBlocks' => $this->pageContentMap('engagements'),
+            'pageSections' => $this->pageSections('engagements'),
             'latestProjects' => $this->transformEngagements(
                 $engagements->where('section', Engagement::SECTION_LATEST_PROJECTS)->values()
             ),
@@ -75,7 +70,7 @@ class PublicSiteController extends Controller
     public function contact(): View
     {
         return view('pages.contact', [
-            'contentBlocks' => $this->pageContentMap('contact'),
+            'pageSections' => $this->pageSections('contact'),
             'serviceOptions' => Service::active()->pluck('title')->values(),
         ]);
     }
@@ -83,7 +78,7 @@ class PublicSiteController extends Controller
     public function careers(): View
     {
         return view('pages.careers', [
-            'contentBlocks' => $this->pageContentMap('careers'),
+            'pageSections' => $this->pageSections('careers'),
             'jobPostings' => JobPosting::open()->latest()->get(),
         ]);
     }
@@ -91,7 +86,7 @@ class PublicSiteController extends Controller
     public function coWorking(): View
     {
         return view('pages.co-working', [
-            'contentBlocks' => $this->pageContentMap('co_working'),
+            'pageSections' => $this->pageSections('co_working'),
         ]);
     }
 
@@ -112,16 +107,20 @@ class PublicSiteController extends Controller
     private function transformServices(Collection $services): Collection
     {
         return $services->map(function (Service $service): array {
+            $plainDescription = trim(strip_tags((string) $service->description));
+
             return [
                 'title' => $service->title,
-                'description' => Str::of((string) $service->description)
-                    ->stripTags()
+                'slug' => $service->slug ?: Str::slug($service->title),
+                'description' => Str::of($plainDescription)
                     ->squish()
                     ->limit(165)
                     ->toString() ?: 'More details about this service will be published soon.',
+                'details' => $plainDescription ?: 'Tell us what you need and our team will guide you through the right service scope.',
                 'icon' => $this->serviceIcon($service),
                 'image_url' => $this->publicImageUrl($service->image),
                 'price_label' => $service->price_from ? 'Starts at PHP '.number_format((float) $service->price_from, 2) : null,
+                'quote_url' => route('contact', ['service' => $service->title]).'#contact-form',
             ];
         });
     }
@@ -168,6 +167,7 @@ class PublicSiteController extends Controller
                     ->toString(),
                 'published_at_label' => $post->published_at?->format('M j, Y') ?? 'Draft',
                 'image_url' => $this->publicImageUrl($post->featured_image),
+                'link_url' => $post->link_url,
             ];
         });
     }
@@ -210,27 +210,11 @@ class PublicSiteController extends Controller
         });
     }
 
-    private function pageContentMap(string $page): Collection
+    private function pageSections(string $page): array
     {
-        return PageContent::published()
-            ->where('page', $page)
-            ->ordered()
-            ->get()
-            ->mapWithKeys(function (PageContent $content): array {
-                return [
-                    $content->section => [[
-                        'label' => $content->label,
-                        'title' => $content->title,
-                        'description' => $content->description,
-                        'image_url' => $content->imageUrl(),
-                        'primary_button_label' => $content->primary_button_label,
-                        'primary_button_url' => $content->primary_button_url,
-                        'secondary_button_label' => $content->secondary_button_label,
-                        'secondary_button_url' => $content->secondary_button_url,
-                    ]],
-                ];
-            })
-            ->map(fn (array $items): array => $items[0]);
+        $sections = config("upturn.page_sections.{$page}", []);
+
+        return is_array($sections) ? $sections : [];
     }
 
     private function publicImageUrl(?string $path): ?string

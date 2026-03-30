@@ -2,7 +2,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\SiteSetting;
 use App\Models\Space;
 use App\Models\Service;
 use Illuminate\Database\Seeder;
@@ -22,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         // Permissions
         $permissions = [
-            'manage-users','manage-settings','manage-content',
+            'manage-users','manage-content',
             'manage-bookings','manage-inquiries',
             'manage-jobs','manage-applications',
         ];
@@ -49,20 +48,6 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
         $hr->assignRole('hr');
-
-        // Site settings
-        $settings = [
-            ['key'=>'site_name',       'value'=>'Upturn Business Solutions',                                                    'group'=>'general'],
-            ['key'=>'site_tagline',    'value'=>'Building Secure and Tax-Compliant Businesses',                                  'group'=>'general'],
-            ['key'=>'contact_email',   'value'=>'sales@upturnpartnership.com',                                                   'group'=>'contact'],
-            ['key'=>'contact_phone',   'value'=>'+63 921 551 4785',                                                              'group'=>'contact'],
-            ['key'=>'contact_address', 'value'=>'Unit 201-202, C&B Circle Mall, Maysan Road, Malinta, Valenzuela City',          'group'=>'contact'],
-            ['key'=>'facebook_url',    'value'=>'https://www.facebook.com/UpturnBusinessSolutions/',                             'group'=>'social'],
-            ['key'=>'instagram_url',   'value'=>'https://www.instagram.com/upturn.businesssolutions/',                          'group'=>'social'],
-        ];
-        foreach ($settings as $s) {
-            SiteSetting::firstOrCreate(['key' => $s['key']], $s);
-        }
 
         // Spaces
         $spaces = [
@@ -92,5 +77,14 @@ class DatabaseSeeder extends Seeder
                 [...$s, 'slug' => Str::slug($s['title']), 'is_active' => true]
             );
         }
+
+        // Staff user
+        $staff = User::firstOrCreate(['email' => 'staff@upturnph.com'], [
+            'name'      => 'Upturn Staff',
+            'password'  => Hash::make('password'),
+            'role'      => 'staff',
+            'is_active' => true,
+        ]);
+        $staff->assignRole('staff');
     }
 }

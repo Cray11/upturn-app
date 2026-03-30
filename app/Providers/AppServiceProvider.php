@@ -1,7 +1,6 @@
 <?php
 namespace App\Providers;
 
-use App\Models\SiteSetting;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Booking\BookingService;
 use App\Services\Inquiry\InquiryService;
@@ -27,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer(['layouts.app', 'pages.*'], function ($view): void {
             $view->with(
-                'siteSettings',
-                SiteSetting::query()->pluck('value', 'key')
+                'companyProfile',
+                config('upturn.company', [])
             );
         });
     }
