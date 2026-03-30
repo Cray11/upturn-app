@@ -55,14 +55,11 @@ class PublicSiteController extends Controller
 
         return view('pages.engagements', [
             'pageSections' => $this->pageSections('engagements'),
-            'latestProjects' => $this->transformEngagements(
-                $engagements->where('section', Engagement::SECTION_LATEST_PROJECTS)->values()
+            'partnerBusinesses' => $this->transformEngagements(
+                $engagements->where('section', Engagement::SECTION_PARTNER_BUSINESSES)->values()
             ),
-            'teamBuildingEvents' => $this->transformEngagements(
-                $engagements->where('section', Engagement::SECTION_TEAM_BUILDING_EVENTS)->values()
-            ),
-            'cultureGallery' => $this->transformEngagements(
-                $engagements->where('section', Engagement::SECTION_CULTURE_GALLERY)->values()
+            'clientSuccessStories' => $this->transformEngagements(
+                $engagements->where('section', Engagement::SECTION_CLIENT_SUCCESS_STORIES)->values()
             ),
         ]);
     }
@@ -77,8 +74,14 @@ class PublicSiteController extends Controller
 
     public function careers(): View
     {
+        $cultureGallery = Engagement::published()
+            ->where('section', Engagement::SECTION_CULTURE_GALLERY)
+            ->ordered()
+            ->get();
+
         return view('pages.careers', [
             'pageSections' => $this->pageSections('careers'),
+            'cultureGallery' => $this->transformEngagements($cultureGallery),
             'jobPostings' => JobPosting::open()->latest()->get(),
         ]);
     }

@@ -86,5 +86,9 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
         $staff->assignRole('staff');
+
+        $this->call([
+            ClientSuccessStoriesSeeder::class,
+        ]);
     }
 }

@@ -1,14 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Engagements - Upturn Business Solutions')
 
-@push('head')
-<style>
-  .masonry-grid { columns: 1; gap: 1.5rem; }
-  @media (min-width: 768px) { .masonry-grid { columns: 2; } }
-  @media (min-width: 1024px) { .masonry-grid { columns: 3; } }
-</style>
-@endpush
-
 @section('content')
   @php
     $fallbackImage = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80';
@@ -17,103 +9,121 @@
     $ctaContent = $pageSections['cta'] ?? [];
   @endphp
 
-  <section class="relative flex h-[500px] items-center justify-center overflow-hidden">
-    <div class="absolute inset-0">
-      <div class="absolute inset-0 z-10 bg-[#002147]/65"></div>
-      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUIOzRktQodlU4MRAvDpLqUPlzt2qh78jxVH-8hqn8YaMIlKlT9O8iJFghngm4h7PfINGb8-k7_NUASQ5qccfTFCAl7AD-ViME7O1xvFmLqpQACwYyANZWbXc5zFQ_mQX2GK3c2nhR29mK-ob1flmAmWrlw3jHfUlUqHxx56qVssVj_zmhqLAjEUeeBTi_prKxrEVmR_SFMJsE12vOS5DrkNeRDeJHOgcUd-KXOT1W_J8ju-4A6r1cyoEt4gDFSNLLtNCUsTgIO5wF" alt="Office culture" class="h-full w-full object-cover"/>
-    </div>
-    <div class="relative z-20 max-w-3xl px-4 text-center">
-      <h1 class="text-5xl font-black tracking-tight text-white md:text-6xl">{{ $heroContent['title'] ?: 'Life at Upturn' }}</h1>
-      <p class="mt-6 text-lg leading-relaxed text-white/90 md:text-xl">
-        {{ $heroContent['description'] ?: 'Explore the projects, team moments, and culture highlights now managed directly from the engagement content module.' }}
+  <section class="relative overflow-hidden bg-[#0c2b5e]">
+    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, #d4af37 1px, transparent 0); background-size: 40px 40px;"></div>
+    <div class="relative z-10 mx-auto max-w-5xl px-6 py-24 text-center md:py-28">
+      <h1 class="text-5xl font-black tracking-tight text-white md:text-6xl">{{ $heroContent['title'] ?: 'Partnerships and Client Success' }}</h1>
+      <p class="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-200 md:text-xl">
+        {{ $heroContent['description'] ?: 'Discover the businesses we partner with and the client success stories that reflect the impact of our work.' }}
       </p>
       <div class="mt-8 flex justify-center">
         <a href="{{ $heroContent['primary_button_url'] ?: route('careers') }}" class="rounded-xl bg-[#d4af37] px-8 py-4 text-lg font-bold text-[#002147] transition-transform hover:scale-105">
-          {{ $heroContent['primary_button_label'] ?: 'Join Our Team' }}
+          {{ $heroContent['primary_button_label'] ?: 'Explore Careers' }}
         </a>
       </div>
     </div>
   </section>
 
-  <section class="border-t border-slate-200 bg-[#f6f6f8] py-16">
+  <section class="bg-white py-20">
     <div class="mx-auto max-w-7xl px-6 lg:px-10">
-      <div class="mb-8 flex items-center gap-2">
-        <span class="material-symbols-outlined text-[#1152d4]">work</span>
-        <h2 class="text-2xl font-bold text-slate-900">Latest Projects</h2>
+      <div class="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 class="text-3xl font-bold text-[#002147]">Partner Businesses</h2>
+          <div class="mt-2 h-1 w-20 rounded-full bg-[#d4af37]"></div>
+        </div>
+        <p class="max-w-2xl text-slate-600 md:text-right">Show the businesses and organizations Upturn has partnered with using their names, logos, and optional short notes managed directly from the Engagements admin panel.</p>
       </div>
 
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        @forelse ($latestProjects as $project)
-          <button
-            type="button"
-            data-engagement-trigger
-            data-engagement='@json($project)'
-            class="group overflow-hidden rounded-xl border border-slate-200 bg-white text-left shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div class="aspect-video overflow-hidden">
-              <img src="{{ $project['primary_image_url'] ?: $fallbackImage }}" alt="{{ $project['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"/>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        @forelse ($partnerBusinesses as $partner)
+          <article class="flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-slate-200 bg-[#f8fafc] shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+            <div class="flex min-h-[13rem] items-center justify-center border-b border-slate-200 bg-white p-8">
+              @if ($partner['primary_image_url'])
+                <img src="{{ $partner['primary_image_url'] }}" alt="{{ $partner['title'] }} logo" class="max-h-24 w-full object-contain"/>
+              @else
+                <div class="flex h-24 w-24 items-center justify-center rounded-full bg-[#1152d4]/10 text-[#1152d4]">
+                  <span class="material-symbols-outlined text-4xl">business</span>
+                </div>
+              @endif
             </div>
-            <div class="space-y-3 p-6">
-              @if ($project['label'])
-                <span class="inline-flex rounded-full bg-[#1152d4]/10 px-2.5 py-1 text-xs font-bold uppercase text-[#1152d4]">
-                  {{ $project['label'] }}
+            <div class="flex flex-1 flex-col gap-3 p-6">
+              @if ($partner['label'])
+                <span class="inline-flex w-fit rounded-full bg-[#1152d4]/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#1152d4]">
+                  {{ $partner['label'] }}
                 </span>
               @endif
-              <h3 class="text-xl font-bold text-slate-900">{{ $project['title'] }}</h3>
-              <p class="text-sm leading-relaxed text-slate-600">{{ $project['excerpt'] }}</p>
-              <div class="flex items-center justify-between pt-2 text-sm font-semibold text-[#1152d4]">
-                <span>Open details</span>
-                @if ($project['image_count'] > 1)
-                  <span>{{ $project['image_count'] }} images</span>
-                @endif
-              </div>
+              <h3 class="text-xl font-bold text-slate-900">{{ $partner['title'] }}</h3>
+              @if (filled($partner['description']))
+                <p class="text-sm leading-relaxed text-slate-600">{{ $partner['excerpt'] }}</p>
+              @endif
             </div>
-          </button>
+          </article>
         @empty
-          <div class="lg:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-white px-8 py-12 text-center">
-            <h3 class="text-xl font-bold text-slate-900">No latest projects published yet.</h3>
-            <p class="mt-3 text-slate-600">Create engagement entries under Latest Projects in the admin panel to fill this section.</p>
+          <div class="sm:col-span-2 xl:col-span-4 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
+            <h3 class="text-xl font-bold text-slate-900">No partner businesses published yet.</h3>
+            <p class="mt-3 text-slate-600">Create Engagement entries under Partner Businesses so admin and staff can publish business names and logos here.</p>
           </div>
         @endforelse
       </div>
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-6 py-20 lg:px-10">
-    <div class="mb-12 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h2 class="text-3xl font-bold text-[#002147]">Team Building Events</h2>
-        <div class="mt-2 h-1 w-20 rounded-full bg-[#d4af37]"></div>
-      </div>
-      <p class="max-w-md text-slate-600 md:text-right">Highlighting the activities that strengthen collaboration and shape the way our team works together.</p>
-    </div>
-
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-      @forelse ($teamBuildingEvents as $event)
-        <button
-          type="button"
-          data-engagement-trigger
-          data-engagement='@json($event)'
-          class="group overflow-hidden rounded-2xl border border-slate-200 bg-white text-left shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl"
-        >
-          <div class="relative h-64 overflow-hidden">
-            <img src="{{ $event['primary_image_url'] ?: $fallbackImage }}" alt="{{ $event['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"/>
-          </div>
-          <div class="space-y-3 p-6">
-            @if ($event['label'])
-              <span class="text-xs font-bold uppercase tracking-widest text-[#d4af37]">{{ $event['label'] }}</span>
-            @endif
-            <h3 class="text-xl font-bold text-[#002147]">{{ $event['title'] }}</h3>
-            <p class="text-sm text-slate-600">{{ $event['excerpt'] }}</p>
-            <div class="pt-2 text-sm font-semibold text-[#1152d4]">View event details</div>
-          </div>
-        </button>
-      @empty
-        <div class="lg:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
-          <h3 class="text-xl font-bold text-slate-900">No team building events published yet.</h3>
-          <p class="mt-3 text-slate-600">Add team building entries from content management to populate this section.</p>
+  <section class="bg-[#f6f8fc] py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-10">
+      <div class="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h2 class="text-3xl font-bold text-[#002147]">Client Success Stories</h2>
+          <div class="mt-2 h-1 w-20 rounded-full bg-[#d4af37]"></div>
         </div>
-      @endforelse
+        <p class="max-w-2xl text-slate-600 md:text-right">Publish stories that highlight how your services helped clients grow, stay compliant, or solve complex business challenges.</p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        @forelse ($clientSuccessStories as $story)
+          <button
+            type="button"
+            data-engagement-trigger
+            data-engagement='@json($story)'
+            class="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white text-left shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
+          >
+            @if ($story['primary_image_url'])
+              <div class="aspect-[4/3] overflow-hidden bg-slate-100">
+                <img src="{{ $story['primary_image_url'] }}" alt="{{ $story['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"/>
+              </div>
+            @else
+              <div class="flex aspect-[4/3] flex-col justify-between bg-[linear-gradient(135deg,#0c2b5e_0%,#1152d4_45%,#0c1424_100%)] p-6 text-white">
+                <div class="flex items-center justify-between">
+                  <span class="material-symbols-outlined text-4xl text-[#d4af37]">workspace_premium</span>
+                  <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white/90">Client Win</span>
+                </div>
+                <div class="space-y-3">
+                  @if ($story['label'])
+                    <span class="inline-flex rounded-full bg-[#d4af37]/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-[#f4dc80]">
+                      {{ $story['label'] }}
+                    </span>
+                  @endif
+                  <p class="max-w-sm text-xl font-black leading-tight text-white/95">{{ $story['title'] }}</p>
+                </div>
+              </div>
+            @endif
+            <div class="space-y-4 p-6">
+              @if ($story['label'])
+                <span class="inline-flex rounded-full bg-[#d4af37]/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-[#8b6b12]">
+                  {{ $story['label'] }}
+                </span>
+              @endif
+              <h3 class="text-2xl font-bold text-slate-900">{{ $story['title'] }}</h3>
+              <p class="text-sm leading-relaxed text-slate-600">{{ $story['excerpt'] }}</p>
+              <div class="pt-2 text-sm font-semibold text-[#1152d4]">Read success story</div>
+            </div>
+          </button>
+        @empty
+          <div class="lg:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-white px-8 py-12 text-center">
+            <h3 class="text-xl font-bold text-slate-900">No client success stories published yet.</h3>
+            <p class="mt-3 text-slate-600">Add Engagement entries under Client Success Stories so admin and staff can manage testimonials, case summaries, and outcome-driven stories here.</p>
+          </div>
+        @endforelse
+      </div>
     </div>
   </section>
 
@@ -143,41 +153,6 @@
             <p class="mt-3 text-sm leading-relaxed text-slate-600">{{ $milestone[3] }}</p>
           </div>
         @endforeach
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-[#002147] py-20">
-    <div class="mx-auto max-w-7xl px-6 lg:px-10">
-      <div class="mb-12">
-        <h2 class="text-3xl font-bold text-[#d4af37]">Culture Gallery</h2>
-        <div class="mt-2 h-1 w-20 rounded-full bg-[#d4af37]"></div>
-      </div>
-
-      <div class="masonry-grid">
-        @forelse ($cultureGallery as $photo)
-          <div class="mb-8 break-inside-avoid px-2">
-            <button
-              type="button"
-              data-engagement-trigger
-              data-engagement='@json($photo)'
-              class="group w-full overflow-hidden rounded-lg border-[8px] border-white bg-white text-left shadow-2xl transition-transform hover:-translate-y-1"
-            >
-              <img src="{{ $photo['primary_image_url'] ?: $fallbackImage }}" alt="{{ $photo['title'] }}" class="w-full object-cover"/>
-              <div class="border-t border-slate-100 bg-white p-4">
-                <p class="text-sm italic text-[#002147]">{{ $photo['title'] }}</p>
-                @if ($photo['image_count'] > 1)
-                  <p class="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">{{ $photo['image_count'] }} images</p>
-                @endif
-              </div>
-            </button>
-          </div>
-        @empty
-          <div class="rounded-3xl border border-dashed border-white/15 bg-white/5 px-8 py-12 text-center text-white">
-            <h3 class="text-xl font-bold">No culture gallery items published yet.</h3>
-            <p class="mt-3 text-slate-300">Add culture gallery entries from content management to display them here.</p>
-          </div>
-        @endforelse
       </div>
     </div>
   </section>

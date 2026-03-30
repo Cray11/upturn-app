@@ -85,9 +85,9 @@ return [
         ],
         'engagements' => [
             'hero' => [
-                'title' => 'Life at Upturn',
-                'description' => 'Explore the projects, team moments, and culture highlights now managed directly from the engagement content module.',
-                'primary_button_label' => 'Join Our Team',
+                'title' => 'Partnerships and Client Success',
+                'description' => 'Discover the businesses we partner with and the client success stories that reflect the impact of our work.',
+                'primary_button_label' => 'Explore Careers',
                 'primary_button_url' => '/careers',
             ],
             'intro' => [

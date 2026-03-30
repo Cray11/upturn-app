@@ -11,6 +11,8 @@ class Engagement extends Model
     use HasFactory;
 
     public const SECTION_LATEST_PROJECTS = 'latest_projects';
+    public const SECTION_PARTNER_BUSINESSES = 'partner_businesses';
+    public const SECTION_CLIENT_SUCCESS_STORIES = 'client_success_stories';
     public const SECTION_TEAM_BUILDING_EVENTS = 'team_building_events';
     public const SECTION_CULTURE_GALLERY = 'culture_gallery';
 
@@ -43,7 +45,24 @@ class Engagement extends Model
     {
         return [
             self::SECTION_LATEST_PROJECTS => 'Latest Projects',
+            self::SECTION_PARTNER_BUSINESSES => 'Partner Businesses',
+            self::SECTION_CLIENT_SUCCESS_STORIES => 'Client Success Stories',
             self::SECTION_TEAM_BUILDING_EVENTS => 'Team Building Events',
+            self::SECTION_CULTURE_GALLERY => 'Culture Gallery',
+        ];
+    }
+
+    public static function engagementManagementSectionOptions(): array
+    {
+        return [
+            self::SECTION_PARTNER_BUSINESSES => 'Partner Businesses',
+            self::SECTION_CLIENT_SUCCESS_STORIES => 'Client Success Stories',
+        ];
+    }
+
+    public static function cultureManagementSectionOptions(): array
+    {
+        return [
             self::SECTION_CULTURE_GALLERY => 'Culture Gallery',
         ];
     }

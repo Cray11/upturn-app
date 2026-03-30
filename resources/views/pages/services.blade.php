@@ -7,17 +7,19 @@
     $ctaContent = $pageSections['cta'] ?? [];
   @endphp
 
+  <div class="relative overflow-hidden bg-[#0c2b5e]">
+    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, #d4af37 1px, transparent 0); background-size: 40px 40px;"></div>
+    <div class="relative z-10 mx-auto max-w-[1200px] px-6 py-24 md:py-28">
+      <div class="max-w-4xl">
+        <span class="mb-3 inline-block text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $heroContent['label'] ?: 'Our Expertise' }}</span>
+        <h1 class="mb-6 text-4xl font-black leading-tight tracking-tight text-white md:text-6xl">{{ $heroContent['title'] ?: 'Comprehensive Business Solutions' }}</h1>
+        <p class="max-w-3xl text-lg font-medium text-slate-200 md:text-xl">{{ $heroContent['description'] ?: 'This page is driven by the service and space records managed inside the admin panel.' }}</p>
+      </div>
+    </div>
+  </div>
+
   <div class="flex flex-1 justify-center px-4 py-6 md:px-20 md:py-10">
     <div class="flex w-full max-w-[1100px] flex-1 flex-col">
-      <div class="mb-10">
-        <div class="relative flex min-h-[320px] flex-col justify-end overflow-hidden rounded-xl border-l-8 border-[#D4AF37] bg-cover bg-center" style="background-image: linear-gradient(to right, rgba(17,82,212,0.9) 0%, rgba(17,82,212,0.4) 100%), url('{{ $heroContent['image_url'] ?: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDMppvco9_HytRB9Xmu60UXNR6gDDU5HHSTfNrG9j1H1bPamFnIKo7M5Q_ezVFLB_SZsqzBGcKUasiU2V7Fn2ioJkKmn1WxyVGnhmHHdHvc4mCTQ7k0sTW-HyZq2E8Im6HYjqLVtywM_s15mbzBAymdn1w2TA91LMHctdyDWH-lGPzGtK2Q5YzUb8NXMlTgVwjw0D4UlMmc3fE_hC0TYysI4V65MEg3DUYlRnl7joKdelIFNjXRI1i8VgzkY_uGeK6GaZBMMXf_1Lvp' }}');">
-          <div class="flex max-w-2xl flex-col p-10">
-            <span class="mb-2 text-sm font-bold uppercase tracking-widest text-[#D4AF37]">{{ $heroContent['label'] ?: 'Our Expertise' }}</span>
-            <h1 class="mb-4 text-4xl font-black leading-tight tracking-tight text-white md:text-5xl">{{ $heroContent['title'] ?: 'Comprehensive Business Solutions' }}</h1>
-            <p class="text-lg font-medium text-slate-100 opacity-90">{{ $heroContent['description'] ?: 'This page is driven by the service and space records managed inside the admin panel.' }}</p>
-          </div>
-        </div>
-      </div>
 
       <div class="mb-10 rounded-3xl border border-slate-200 bg-slate-50 px-6 py-8 md:px-8">
         <span class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $introContent['label'] ?: 'Service Portfolio' }}</span>

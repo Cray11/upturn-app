@@ -2,11 +2,10 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\EngagementResource\Pages;
+use App\Filament\Admin\Resources\CultureGalleryResource\Pages;
 use App\Models\Engagement;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -19,11 +18,11 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
-class EngagementResource extends Resource
+class CultureGalleryResource extends Resource
 {
     protected static ?string $model = Engagement::class;
 
@@ -31,30 +30,31 @@ class EngagementResource extends Resource
 
     protected static ?string $navigationGroup = 'Content Management';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?string $navigationLabel = 'Culture Gallery';
+
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('section')
-                ->options(Engagement::engagementManagementSectionOptions())
-                ->required()
-                ->native(false),
+            Hidden::make('section')
+                ->default(Engagement::SECTION_CULTURE_GALLERY)
+                ->required(),
             TextInput::make('label')
                 ->nullable()
                 ->maxLength(255)
-                ->helperText('Examples: Accounting Partner, Logistics Partner, Compliance Win, Growth Story'),
+                ->helperText('Examples: Team Outing, Anniversary, Volunteer Day, Holiday Party'),
             TextInput::make('title')
                 ->required()
                 ->maxLength(255)
-                ->helperText('Use the partner business name or the client success story headline.'),
+                ->helperText('Use the gallery headline or event name shown on the Careers page.'),
             Textarea::make('description')
                 ->required()
                 ->rows(6)
-                ->helperText('Add a short partner summary or the full success story details for the public page.')
+                ->helperText('Add the caption or story behind the culture gallery set.')
                 ->columnSpanFull(),
             FileUpload::make('images')
-                ->label('Image / Logo Gallery')
+                ->label('Culture Images')
                 ->multiple()
                 ->reorderable()
                 ->appendFiles()
@@ -65,7 +65,7 @@ class EngagementResource extends Resource
                 ->panelLayout('grid')
                 ->openable()
                 ->downloadable()
-                ->helperText('Upload logos, photos, or supporting visuals. The first image is used as the primary preview on the public page.')
+                ->helperText('Upload one or more photos. These images will appear on the Careers page culture gallery.')
                 ->columnSpanFull(),
             TextInput::make('sort_order')
                 ->numeric()
@@ -80,11 +80,6 @@ class EngagementResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('section')
-                    ->label('Section')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => Engagement::sectionOptions()[$state] ?? $state)
-                    ->sortable(),
                 TextColumn::make('label')
                     ->limit(24)
                     ->searchable(),
@@ -106,10 +101,8 @@ class EngagementResource extends Resource
                     ->since()
                     ->sortable(),
             ])
-            ->defaultSort('section')
+            ->defaultSort('sort_order')
             ->filters([
-                SelectFilter::make('section')
-                    ->options(Engagement::engagementManagementSectionOptions()),
                 TernaryFilter::make('is_published')
                     ->label('Published'),
             ])
@@ -135,7 +128,7 @@ class EngagementResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->whereIn('section', array_keys(Engagement::engagementManagementSectionOptions()));
+            ->where('section', Engagement::SECTION_CULTURE_GALLERY);
     }
 
     public static function canAccess(): bool
@@ -146,9 +139,9 @@ class EngagementResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEngagements::route('/'),
-            'create' => Pages\CreateEngagement::route('/create'),
-            'edit' => Pages\EditEngagement::route('/{record}/edit'),
+            'index' => Pages\ListCultureGalleries::route('/'),
+            'create' => Pages\CreateCultureGallery::route('/create'),
+            'edit' => Pages\EditCultureGallery::route('/{record}/edit'),
         ];
     }
 }
