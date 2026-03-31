@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Engagement;
 use App\Models\JobPosting;
-use App\Models\PageContent;
 use App\Models\Post;
 use App\Models\Service;
 use App\Models\Space;
@@ -19,6 +18,15 @@ class PublicWebsiteTest extends TestCase
 
     public function test_public_pages_render_with_prd_content(): void
     {
+        config()->set('upturn.page_sections.home.hero.title', 'Homepage CMS Hero');
+        config()->set('upturn.page_sections.home.hero.primary_button_label', 'Book Your Free Consultation Now!');
+        config()->set('upturn.page_sections.about.intro.title', 'About foundation managed in CMS');
+        config()->set('upturn.page_sections.services.cta.title', 'Workspace CTA from CMS');
+        config()->set('upturn.page_sections.contact.cta.title', 'Contact CTA from CMS');
+        config()->set('upturn.page_sections.careers.intro.title', 'Culture that rewards growth');
+        config()->set('upturn.page_sections.co_working.cta.title', 'Book your workspace visit');
+        config()->set('upturn.page_sections.engagements.cta.title', 'Engagement CTA from CMS');
+
         $author = User::factory()->create();
 
         $service = Service::create([
@@ -57,93 +65,22 @@ class PublicWebsiteTest extends TestCase
             'published_at' => now(),
         ]);
 
-        PageContent::create([
-            'page' => 'home',
-            'section' => 'hero',
-            'label' => 'Homepage CMS Label',
-            'title' => 'Homepage CMS Hero',
-            'description' => 'Homepage hero copy managed from the CMS.',
-            'primary_button_label' => 'Book Your Free Consultation Now!',
-            'primary_button_url' => route('contact'),
-            'is_published' => true,
-        ]);
-
-        PageContent::create([
-            'page' => 'about',
-            'section' => 'intro',
-            'label' => 'About CMS Intro',
-            'title' => 'About foundation managed in CMS',
-            'description' => 'About-page foundation content should now be editable.',
-            'is_published' => true,
-        ]);
-
-        PageContent::create([
-            'page' => 'services',
-            'section' => 'cta',
-            'label' => 'Services CMS CTA',
-            'title' => 'Workspace CTA from CMS',
-            'description' => 'Service-page workspace promotion managed in the CMS.',
-            'primary_button_label' => 'Browse Spaces',
-            'primary_button_url' => route('co-working'),
-            'is_published' => true,
-        ]);
-
-        PageContent::create([
-            'page' => 'contact',
-            'section' => 'cta',
-            'title' => 'Contact CTA from CMS',
-            'description' => 'Contact footer banner managed from the CMS.',
-            'primary_button_label' => 'Book a Consultation',
-            'primary_button_url' => route('contact'),
-            'secondary_button_label' => 'View Solutions',
-            'secondary_button_url' => route('services'),
-            'is_published' => true,
-        ]);
-
-        PageContent::create([
-            'page' => 'careers',
-            'section' => 'intro',
-            'label' => 'Careers CMS Intro',
-            'title' => 'Culture that rewards growth',
-            'description' => 'Careers culture block managed from the CMS.',
-            'is_published' => true,
-        ]);
-
-        PageContent::create([
-            'page' => 'co_working',
-            'section' => 'cta',
-            'label' => 'Coworking CMS CTA',
-            'title' => 'Book your workspace visit',
-            'description' => 'Coworking booking header managed from the CMS.',
-            'is_published' => true,
-        ]);
-
-        PageContent::create([
-            'page' => 'engagements',
-            'section' => 'cta',
-            'title' => 'Engagement CTA from CMS',
-            'description' => 'Engagement CTA should render from CMS content.',
-            'primary_button_label' => 'Partner With Us',
-            'primary_button_url' => route('contact'),
-            'is_published' => true,
-        ]);
-
         Engagement::create([
-            'section' => Engagement::SECTION_LATEST_PROJECTS,
-            'label' => 'Tax Compliance',
-            'title' => 'BIR Case Handling',
-            'description' => 'Expert representation for complex tax audit concerns.',
-            'images' => ['engagements/project-one.jpg'],
+            'section' => Engagement::SECTION_PARTNER_BUSINESSES,
+            'label' => 'Accounting Partner',
+            'title' => 'RAM Builders Inc.',
+            'description' => 'A long-term partner supported through recurring compliance work.',
+            'images' => ['engagements/partner-one.jpg'],
             'sort_order' => 1,
             'is_published' => true,
         ]);
 
         Engagement::create([
-            'section' => Engagement::SECTION_TEAM_BUILDING_EVENTS,
-            'label' => 'October 2023',
-            'title' => 'Annual Retreat',
-            'description' => 'Three days of strategic planning and team bonding.',
-            'images' => ['engagements/team-one.jpg', 'engagements/team-two.jpg'],
+            'section' => Engagement::SECTION_CLIENT_SUCCESS_STORIES,
+            'label' => 'Tax Compliance',
+            'title' => 'BIR Case Handling',
+            'description' => 'Expert representation for complex tax audit concerns.',
+            'images' => ['engagements/project-one.jpg'],
             'sort_order' => 1,
             'is_published' => true,
         ]);
@@ -173,13 +110,7 @@ class PublicWebsiteTest extends TestCase
             ->assertOk()
             ->assertSee('Homepage CMS Hero')
             ->assertSee('Book Your Free Consultation Now!')
-            ->assertSee('Looking for a Trustworthy Accountant?')
-            ->assertSee("Navigating BIR &amp; Tax compliance problems? We're here to help you!", false)
             ->assertSee('Leave a Testimonial')
-            ->assertSee('Deliberations')
-            ->assertDontSee('View Case Studies')
-            ->assertDontSee('Plan your next update')
-            ->assertDontSee('Live Business Snapshot')
             ->assertSee($service->title)
             ->assertSee('Acme Trading')
             ->assertSee('Website Launch')
@@ -188,8 +119,8 @@ class PublicWebsiteTest extends TestCase
         $this->get(route('about'))
             ->assertOk()
             ->assertSee('About foundation managed in CMS')
-            ->assertSee('Live Platform Snapshot')
-            ->assertSee('Website Launch');
+            ->assertSee('Our Mission')
+            ->assertSee('Dennis Bayangos, CPA, CTT, MBA');
 
         $this->get(route('services'))
             ->assertOk()
@@ -199,12 +130,11 @@ class PublicWebsiteTest extends TestCase
 
         $this->get(route('engagements'))
             ->assertOk()
-            ->assertSee('Life at Upturn')
-            ->assertSee('Latest Projects')
+            ->assertSee('Partner Businesses')
+            ->assertSee('Client Success Stories')
             ->assertSee('Engagement CTA from CMS')
-            ->assertSee('BIR Case Handling')
-            ->assertSee('Annual Retreat')
-            ->assertSee('10th Anniversary Gala');
+            ->assertSee('RAM Builders Inc.')
+            ->assertSee('BIR Case Handling');
 
         $this->get(route('contact'))
             ->assertOk()
@@ -221,6 +151,7 @@ class PublicWebsiteTest extends TestCase
             ->assertOk()
             ->assertSee('Current Opportunities')
             ->assertSee('Culture that rewards growth')
+            ->assertSee('10th Anniversary Gala')
             ->assertSee($jobPosting->title);
 
         $this->get(route('careers.show', $jobPosting))

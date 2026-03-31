@@ -82,7 +82,7 @@ class AdminDashboardTest extends TestCase
             ->assertSee('Admin Dashboard')
             ->assertSee('New Inquiries')
             ->assertSee('Platform Activity')
-            ->assertSee('Admin Shortcuts')
+            ->assertSee('Quick Actions')
             ->assertSee('Recent Inquiries')
             ->assertSee('Upcoming Bookings')
             ->assertSee('Nina Prospect')

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Upturn Business Solutions | Corporate Financial Excellence')
+
 @section('content')
   @php
     $heroContent = $pageSections['hero'] ?? [];
@@ -23,20 +24,53 @@
     $testimonialMarqueeDuration = max(36, $testimonialCount * 7);
     $marqueeTestimonials = $testimonialCount > 1 ? $testimonials->concat($testimonials) : collect();
     $testimonialReviewNotes = data_get($pageContent, 'testimonial_review_notes', []);
+    $heroBackgroundSlides = [
+        [
+            'type' => 'video',
+        ],
+        [
+            'type' => 'static',
+            'overlay_style' => 'background-image: radial-gradient(circle at 20% 20%, rgba(212,175,55,0.2), transparent 22%), radial-gradient(circle at 80% 18%, rgba(17,82,212,0.24), transparent 26%);',
+        ],
+        [
+            'type' => 'static',
+            'overlay_style' => 'background-image: radial-gradient(circle at 18% 78%, rgba(17,82,212,0.28), transparent 24%), radial-gradient(circle at 78% 25%, rgba(212,175,55,0.18), transparent 24%);',
+        ],
+        [
+            'type' => 'static',
+            'overlay_style' => 'background-image: radial-gradient(circle at 12% 18%, rgba(17,82,212,0.22), transparent 22%), radial-gradient(circle at 86% 82%, rgba(212,175,55,0.22), transparent 25%);',
+        ],
+    ];
   @endphp
 
-  <section class="relative overflow-hidden bg-black text-white" style="height: calc(100dvh - 72px); min-height: calc(100vh - 72px);">
-    <div class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
-      <video
-        class="absolute inset-0 m-auto block h-auto w-auto max-h-full max-w-full object-contain"
-        autoplay
-        muted
-        loop
-        playsinline
-        aria-hidden="true"
-      >
-        <source src="{{ asset('images/videopresentation.mp4') }}" type="video/mp4">
-      </video>
+  <section class="relative overflow-hidden bg-black text-white" style="height: calc(100dvh - 72px); min-height: calc(100vh - 72px);" data-home-hero-carousel data-interval="40000">
+    <div class="absolute inset-0">
+      @foreach ($heroBackgroundSlides as $index => $slide)
+        <div
+          class="absolute inset-0 transition-opacity duration-1000 {{ $index === 0 ? 'opacity-100' : 'pointer-events-none opacity-0' }}"
+          data-home-hero-slide
+          aria-hidden="{{ $index === 0 ? 'false' : 'true' }}"
+        >
+          @if ($slide['type'] === 'video')
+            <div class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+              <video
+                class="absolute inset-0 m-auto block h-auto w-auto max-h-full max-w-full object-contain"
+                autoplay
+                muted
+                loop
+                playsinline
+                aria-hidden="true"
+              >
+                <source src="{{ asset('images/videopresentation.mp4') }}" type="video/mp4">
+              </video>
+            </div>
+          @else
+            <div class="absolute inset-0 bg-[#0c2b5e]"></div>
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, #d4af37 1px, transparent 0); background-size: 40px 40px;"></div>
+            <div class="absolute inset-0" style="{{ $slide['overlay_style'] }}"></div>
+          @endif
+        </div>
+      @endforeach
     </div>
 
     <div class="relative mx-auto flex h-full max-w-7xl items-end px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
@@ -57,6 +91,22 @@
             <span class="material-symbols-outlined">arrow_forward</span>
           </a>
         </div>
+      </div>
+    </div>
+
+    <div class="absolute inset-x-0 bottom-4 z-20 flex justify-center px-4 sm:bottom-6">
+      <div class="flex items-center gap-3 rounded-full border border-white/10 bg-slate-950/35 px-4 py-3 backdrop-blur-md">
+        @foreach ($heroBackgroundSlides as $index => $slide)
+          <button
+            type="button"
+            class="h-3.5 w-3.5 rounded-full border border-white/30 bg-white/25 transition-all duration-300 hover:scale-110 hover:bg-white/45 {{ $index === 0 ? 'border-[#d4af37] bg-[#d4af37] shadow-[0_0_0_4px_rgba(212,175,55,0.18)]' : '' }}"
+            data-home-hero-control
+            data-slide-to="{{ $index }}"
+            data-active="{{ $index === 0 ? 'true' : 'false' }}"
+            aria-label="Show hero background {{ $index + 1 }}"
+            aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+          ></button>
+        @endforeach
       </div>
     </div>
   </section>
@@ -378,6 +428,89 @@
 
 @push('scripts')
 <script>
+  (function () {
+    const carousel = document.querySelector('[data-home-hero-carousel]');
+    const slides = carousel?.querySelectorAll('[data-home-hero-slide]');
+    const controls = carousel?.querySelectorAll('[data-home-hero-control]');
+    const intervalMs = Number(carousel?.getAttribute('data-interval') || 40000);
+
+    if (!carousel || !slides?.length) {
+      return;
+    }
+
+    let activeIndex = 0;
+    let timerId = null;
+
+    const syncVideoPlayback = () => {
+      slides.forEach((slide, slideIndex) => {
+        const video = slide.querySelector('video');
+
+        if (!video) {
+          return;
+        }
+
+        if (slideIndex === activeIndex) {
+          const playback = video.play();
+
+          if (playback && typeof playback.catch === 'function') {
+            playback.catch(() => {});
+          }
+
+          return;
+        }
+
+        video.pause();
+      });
+    };
+
+    const setActiveSlide = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === activeIndex;
+
+        slide.classList.toggle('opacity-100', isActive);
+        slide.classList.toggle('opacity-0', !isActive);
+        slide.classList.toggle('pointer-events-none', !isActive);
+        slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      });
+
+      controls?.forEach((control, controlIndex) => {
+        const isActive = controlIndex === activeIndex;
+
+        control.setAttribute('data-active', isActive ? 'true' : 'false');
+        control.setAttribute('aria-current', isActive ? 'true' : 'false');
+        control.classList.toggle('border-[#d4af37]', isActive);
+        control.classList.toggle('bg-[#d4af37]', isActive);
+        control.classList.toggle('shadow-[0_0_0_4px_rgba(212,175,55,0.18)]', isActive);
+        control.classList.toggle('border-white/30', !isActive);
+        control.classList.toggle('bg-white/25', !isActive);
+      });
+
+      syncVideoPlayback();
+    };
+
+    const restartAutoRotate = () => {
+      if (timerId !== null) {
+        window.clearInterval(timerId);
+      }
+
+      timerId = window.setInterval(() => {
+        setActiveSlide(activeIndex + 1);
+      }, intervalMs);
+    };
+
+    controls?.forEach((control, controlIndex) => {
+      control.addEventListener('click', () => {
+        setActiveSlide(controlIndex);
+        restartAutoRotate();
+      });
+    });
+
+    setActiveSlide(0);
+    restartAutoRotate();
+  })();
+
   (function () {
     const modal = document.getElementById('testimonial-modal');
     const overlay = modal?.querySelector('[data-testimonial-overlay]');
