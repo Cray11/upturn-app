@@ -6,13 +6,14 @@
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.4",
-      "maxDuration": 30
+      "maxDuration": 30,
+      "excludeFiles": "{docs/**,tests/**,.vscode/**,storage/**,public/images/**,public/build/assets/**,public/css/**,public/js/**,public/favicon.ico,public/robots.txt,README.md,.phpunit.result.cache}"
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/api/index.php"
+      "source": "/(.*)",
+      "destination": "/api/index.php"
     }
   ]
 }
