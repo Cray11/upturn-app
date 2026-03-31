@@ -82,7 +82,7 @@
         <div class="border-b border-slate-100 px-6 py-6 sm:px-8">
           <h2 class="text-3xl font-black text-slate-900">Apply for this role</h2>
           <p class="mt-3 text-sm leading-6 text-slate-600">
-            Complete the form below and upload your resume as a PDF. Your submission will go directly into the HR panel for review.
+            Complete the form below and upload your resume as a PDF. Your submission will be reviewed by our hiring team.
           </p>
         </div>
 

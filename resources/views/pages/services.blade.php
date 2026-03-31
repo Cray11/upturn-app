@@ -13,7 +13,7 @@
       <div class="max-w-4xl">
         <span class="mb-3 inline-block text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $heroContent['label'] ?: 'Our Expertise' }}</span>
         <h1 class="mb-6 text-4xl font-black leading-tight tracking-tight text-white md:text-6xl">{{ $heroContent['title'] ?: 'Comprehensive Business Solutions' }}</h1>
-        <p class="max-w-3xl text-lg font-medium text-slate-200 md:text-xl">{{ $heroContent['description'] ?: 'This page is driven by the service and space records managed inside the admin panel.' }}</p>
+        <p class="max-w-3xl text-lg font-medium text-slate-200 md:text-xl">{{ $heroContent['description'] ?: 'From one-time compliance projects to ongoing retainer support, annual audit engagements, virtual office solutions, and conference room rentals, Upturn helps businesses stay compliant and ready to grow.' }}</p>
       </div>
     </div>
   </div>
@@ -24,7 +24,7 @@
       <div class="mb-10 rounded-3xl border border-slate-200 bg-slate-50 px-6 py-8 md:px-8">
         <span class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $introContent['label'] ?: 'Service Portfolio' }}</span>
         <h2 class="mt-3 text-3xl font-black text-slate-900 md:text-4xl">{{ $introContent['title'] ?: 'Solutions tailored to each stage of business growth' }}</h2>
-        <p class="mt-4 max-w-3xl text-base leading-relaxed text-slate-600">{{ $introContent['description'] ?: 'Use this section to introduce your offer mix before visitors browse the live service records below.' }}</p>
+        <p class="mt-4 max-w-3xl text-base leading-relaxed text-slate-600">{{ $introContent['description'] ?: 'Choose from one-time engagements, monthly retainer services, annual audit support, virtual office rental, and conference room solutions based on your operational needs.' }}</p>
         <p class="mt-3 text-sm font-medium text-[#1152d4]">Open a preview to see the full service description and image before requesting a quote.</p>
       </div>
 
@@ -62,7 +62,7 @@
         @empty
           <div class="md:col-span-2 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
             <h3 class="text-2xl font-bold text-slate-900">No active services are published yet.</h3>
-            <p class="mt-3 text-slate-600">Create and activate services in the admin panel to populate this page.</p>
+            <p class="mt-3 text-slate-600">Please contact our team directly and we will recommend the best service for your business needs.</p>
           </div>
         @endforelse
       </div>
@@ -102,15 +102,15 @@
                           <div class="mt-4 space-y-3">
                             <div class="flex items-start gap-3">
                               <span class="material-symbols-outlined mt-0.5 text-[#1152d4]">check_circle</span>
-                              <p class="text-sm leading-7 text-slate-600">Use the quote button below to carry this exact service into the contact form automatically.</p>
+                              <p class="text-sm leading-7 text-slate-600">We begin with a discovery call or consultation to understand your needs and confirm the right service.</p>
                             </div>
                             <div class="flex items-start gap-3">
                               <span class="material-symbols-outlined mt-0.5 text-[#1152d4]">check_circle</span>
-                              <p class="text-sm leading-7 text-slate-600">Add your business details, timeline, and any custom scope notes so the team can respond faster.</p>
+                              <p class="text-sm leading-7 text-slate-600">You receive a customized quote and engagement confirmation before onboarding or kickoff begins.</p>
                             </div>
                             <div class="flex items-start gap-3">
                               <span class="material-symbols-outlined mt-0.5 text-[#1152d4]">check_circle</span>
-                              <p class="text-sm leading-7 text-slate-600">If you just want to ask a question first, you can still open the regular contact form directly.</p>
+                              <p class="text-sm leading-7 text-slate-600">After execution, deliverables are completed and final or monthly billing follows the agreed arrangement.</p>
                             </div>
                           </div>
                         </div>
@@ -138,9 +138,9 @@
       <section class="mt-12 rounded-3xl bg-[#0c1424] px-6 py-10 text-white md:px-10 md:py-14">
         <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div class="max-w-2xl space-y-3">
-            <span class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $ctaContent['label'] ?: 'Workspace Inventory' }}</span>
-            <h2 class="text-3xl font-black md:text-4xl">{{ $ctaContent['title'] ?: 'Available Spaces from Booking Management' }}</h2>
-            <p class="text-slate-300">{{ $ctaContent['description'] ?: 'As spaces are added or marked available in the admin panel, they appear here for public visitors to explore.' }}</p>
+            <span class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">{{ $ctaContent['label'] ?: 'Workspace Solutions' }}</span>
+            <h2 class="text-3xl font-black md:text-4xl">{{ $ctaContent['title'] ?: 'Flexible virtual office and conference room options' }}</h2>
+            <p class="text-slate-300">{{ $ctaContent['description'] ?: 'Give your business a professional address and a reliable meeting space with support designed for startups, remote teams, consultants, and growing businesses.' }}</p>
           </div>
           <a href="{{ $ctaContent['primary_button_url'] ?: route('co-working') }}" class="inline-flex items-center gap-2 rounded-lg bg-[#d4af37] px-6 py-3 font-bold text-slate-900 transition-all hover:brightness-105">
             {{ $ctaContent['primary_button_label'] ?: 'Book a Space' }} <span class="material-symbols-outlined text-sm">arrow_forward</span>
@@ -169,7 +169,7 @@
           @empty
             <div class="lg:col-span-3 rounded-3xl border border-dashed border-white/15 bg-white/5 px-8 py-12 text-center">
               <h3 class="text-2xl font-bold text-white">No spaces are currently available.</h3>
-              <p class="mt-3 text-slate-300">Mark spaces as available in booking management to show them here.</p>
+              <p class="mt-3 text-slate-300">Please contact our team for current availability, virtual office options, and workspace recommendations.</p>
             </div>
           @endforelse
         </div>

@@ -8,9 +8,11 @@
     $contactProfile = data_get($companyProfile ?? [], 'contact', []);
     $contactAddress = data_get($contactProfile, 'address', 'Unit 201-202, C&B Circle Mall, Maysan Road, Malinta, Valenzuela City');
     $contactPhone = data_get($contactProfile, 'phone', '+63 921 551 4785');
+    $contactPhones = data_get($contactProfile, 'phones', ['Phone' => $contactPhone]);
     $contactEmail = data_get($contactProfile, 'email', 'sales@upturnpartnership.com');
+    $contactEmails = data_get($contactProfile, 'emails', ['Email' => $contactEmail]);
     $officeHoursWeekday = data_get($contactProfile, 'office_hours.weekday', 'Mon - Fri: 8:00 AM - 5:00 PM');
-    $officeHoursWeekend = data_get($contactProfile, 'office_hours.weekend', 'Sat: 9:00 AM - 12:00 PM');
+    $officeHoursWeekend = data_get($contactProfile, 'office_hours.weekend');
     $contactServiceOptions = $serviceOptions->push('Careers')->unique()->values();
     $requestedService = old('service_interest') ?: request('service');
     $selectedService = $contactServiceOptions->first(fn (string $option) => $option === $requestedService);
@@ -107,26 +109,41 @@
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/10 text-[#d4af37]">
               <span class="material-symbols-outlined">call</span>
             </div>
-            <h4 class="font-bold text-slate-900">Phone Number</h4>
-            <p class="text-sm leading-relaxed text-slate-600">
-              <a href="tel:{{ preg_replace('/[^0-9+]/', '', $contactPhone) }}" class="hover:text-[#1152d4]">{{ $contactPhone }}</a>
-            </p>
+            <h4 class="font-bold text-slate-900">Phone Numbers</h4>
+            <div class="space-y-1 text-sm leading-relaxed text-slate-600">
+              @foreach ($contactPhones as $label => $phone)
+                <p>
+                  <span class="font-semibold text-slate-700">{{ $label }}:</span>
+                  <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:text-[#1152d4]">{{ $phone }}</a>
+                </p>
+              @endforeach
+            </div>
           </div>
           <div class="flex flex-col gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1152d4]/10 text-[#1152d4]">
               <span class="material-symbols-outlined">mail</span>
             </div>
-            <h4 class="font-bold text-slate-900">Email Address</h4>
-            <p class="text-sm leading-relaxed text-slate-600">
-              <a href="mailto:{{ $contactEmail }}" class="hover:text-[#1152d4]">{{ $contactEmail }}</a>
-            </p>
+            <h4 class="font-bold text-slate-900">Email Addresses</h4>
+            <div class="space-y-1 text-sm leading-relaxed text-slate-600">
+              @foreach ($contactEmails as $label => $email)
+                <p>
+                  <span class="font-semibold text-slate-700">{{ $label }}:</span>
+                  <a href="mailto:{{ $email }}" class="hover:text-[#1152d4]">{{ $email }}</a>
+                </p>
+              @endforeach
+            </div>
           </div>
           <div class="flex flex-col gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#d4af37]/10 text-[#d4af37]">
               <span class="material-symbols-outlined">schedule</span>
             </div>
             <h4 class="font-bold text-slate-900">Office Hours</h4>
-            <p class="text-sm leading-relaxed text-slate-600">{{ $officeHoursWeekday }}<br/>{{ $officeHoursWeekend }}</p>
+            <p class="text-sm leading-relaxed text-slate-600">
+              {{ $officeHoursWeekday }}
+              @if (filled($officeHoursWeekend))
+                <br/>{{ $officeHoursWeekend }}
+              @endif
+            </p>
           </div>
         </div>
 

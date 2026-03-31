@@ -31,7 +31,6 @@
           <h2 class="text-3xl font-bold text-[#002147]">Partner Businesses</h2>
           <div class="mt-2 h-1 w-20 rounded-full bg-[#d4af37]"></div>
         </div>
-        <p class="max-w-2xl text-slate-600 md:text-right">Show the businesses and organizations Upturn has partnered with using their names, logos, and optional short notes managed directly from the Engagements admin panel.</p>
       </div>
 
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -61,7 +60,7 @@
         @empty
           <div class="sm:col-span-2 xl:col-span-4 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
             <h3 class="text-xl font-bold text-slate-900">No partner businesses published yet.</h3>
-            <p class="mt-3 text-slate-600">Create Engagement entries under Partner Businesses so admin and staff can publish business names and logos here.</p>
+            <p class="mt-3 text-slate-600">Our partner businesses and supported organizations will be featured here soon.</p>
           </div>
         @endforelse
       </div>
@@ -75,7 +74,6 @@
           <h2 class="text-3xl font-bold text-[#002147]">Client Success Stories</h2>
           <div class="mt-2 h-1 w-20 rounded-full bg-[#d4af37]"></div>
         </div>
-        <p class="max-w-2xl text-slate-600 md:text-right">Publish stories that highlight how your services helped clients grow, stay compliant, or solve complex business challenges.</p>
       </div>
 
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -120,7 +118,7 @@
         @empty
           <div class="lg:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-white px-8 py-12 text-center">
             <h3 class="text-xl font-bold text-slate-900">No client success stories published yet.</h3>
-            <p class="mt-3 text-slate-600">Add Engagement entries under Client Success Stories so admin and staff can manage testimonials, case summaries, and outcome-driven stories here.</p>
+            <p class="mt-3 text-slate-600">Client results and case stories will be featured here as more engagements are documented.</p>
           </div>
         @endforelse
       </div>

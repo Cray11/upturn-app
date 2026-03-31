@@ -4,105 +4,15 @@
   @php
     $heroContent = $pageSections['hero'] ?? [];
     $introContent = $pageSections['intro'] ?? [];
-    $trustSignals = [
-        ['icon' => 'support_agent', 'title' => 'Responsive Support'],
-        ['icon' => 'receipt_long', 'title' => 'Tax-Ready Records'],
-        ['icon' => 'shield_person', 'title' => 'Compliance-First Guidance'],
-    ];
-    $trustCards = [
-        [
-            'icon' => 'query_stats',
-            'title' => 'Clear Financial Direction',
-            'description' => 'Get practical accounting guidance that supports better decisions for your business.',
-        ],
-        [
-            'icon' => 'schedule',
-            'title' => 'Timely Submissions',
-            'description' => 'Keep deadlines under control with a team that values accuracy and consistency.',
-        ],
-        [
-            'icon' => 'workspace_premium',
-            'title' => 'Reliable Professional Care',
-            'description' => 'Work with professionals who understand both compliance detail and client service.',
-        ],
-        [
-            'icon' => 'trending_up',
-            'title' => 'Growth-Focused Support',
-            'description' => 'Stay organized while your business scales, without losing sight of compliance.',
-        ],
-    ];
-    $missionHighlights = [
-        [
-            'icon' => 'work',
-            'title' => 'Focus on Your Business',
-            'description' => 'Let our expert team handle the administrative tasks, so you can concentrate on what truly matters to you.',
-        ],
-        [
-            'icon' => 'gpp_bad',
-            'title' => 'Avoid Penalties',
-            'description' => 'Our professionals ensure timely and accurate submissions, helping you avoid costly penalties.',
-        ],
-        [
-            'icon' => 'sentiment_calm',
-            'title' => 'Reduce Stress',
-            'description' => 'Delegate the paperwork to us and enjoy less stress while focusing on your core priorities.',
-        ],
-        [
-            'icon' => 'task_alt',
-            'title' => 'Effortless Compliance',
-            'description' => 'Get expert assistance to meet all legal requirements and steer clear of fines.',
-        ],
-    ];
-    $complianceBenefits = [
-        'Focus on Your Business',
-        'Avoid Penalties',
-        'Less Stress',
-        'Easy Compliance',
-        'Savings',
-    ];
-    $servicePrinciples = [
-        [
-            'icon' => 'workspace_premium',
-            'title' => 'Quality Services',
-            'description' => 'Understand the needs of the client by providing the highest quality accounting practice and other related professional services.',
-        ],
-        [
-            'icon' => 'verified_user',
-            'title' => 'Professionalism',
-            'description' => 'At Upturn Business Solutions, we uphold the highest standards of professionalism, ensuring integrity, accuracy, and adherence to industry regulations in every service we provide. Our expert team delivers tailored solutions with precision, offering reliable support for your financial and business needs.',
-        ],
-    ];
-    $deliveryPhases = [
-        [
-            'number' => '01.',
-            'icon' => 'forum',
-            'title' => 'Deliberations',
-            'items' => [
-                'Identify Client\'s Needs: Initial discussions to understand the client\'s specific requirements and objectives.',
-                'Assessment and Strategy Building: Develop tailored strategies and plans to meet the client\'s goals.',
-            ],
-        ],
-        [
-            'number' => '02.',
-            'icon' => 'assignment_add',
-            'title' => 'Onboarding Process',
-            'items' => [
-                'Client Onboarding: Formalize the engagement by signing agreements and setting expectations.',
-                'Gathering Business Information: Collect necessary data and documents from the client.',
-                'Setting Up Tools and Platforms: Implement and configure the tools and platforms required for service delivery.',
-            ],
-        ],
-        [
-            'number' => '03.',
-            'icon' => 'monitoring',
-            'title' => 'Monthly Collaborations or Project Monitoring',
-            'items' => [
-                'Documents & Transactions Transmittal: Regular submission of necessary documents and transaction records by the client.',
-                'Processing: Upturn will do its job by handling the received information, completing tasks, and ensuring compliance.',
-                'Reporting & Deliverables: Provide the client with detailed reports and deliverables, summarizing completed tasks and outcomes.',
-            ],
-        ],
-    ];
+    $pageContent = $pageContent ?? [];
+    $trustSignals = data_get($pageContent, 'trust_signals', []);
+    $trustCards = data_get($pageContent, 'trust_cards', []);
+    $missionHighlights = data_get($pageContent, 'mission_highlights', []);
+    $accreditationBadges = data_get($pageContent, 'accreditation_badges', []);
+    $servicePrinciples = data_get($pageContent, 'service_principles', []);
+    $featuredStats = data_get($pageContent, 'featured_stats', []);
+    $featuredClients = data_get($pageContent, 'featured_clients', []);
+    $deliveryPhases = data_get($pageContent, 'delivery_phases', []);
     $testimonialFormHasErrors = $errors->hasAny([
         'client_name',
         'company',
@@ -112,17 +22,13 @@
     $testimonialCount = is_countable($testimonials) ? count($testimonials) : 0;
     $testimonialMarqueeDuration = max(36, $testimonialCount * 7);
     $marqueeTestimonials = $testimonialCount > 1 ? $testimonials->concat($testimonials) : collect();
-    $testimonialReviewNotes = [
-        'Only approved testimonials are published on the homepage.',
-        'You can share your company name, or leave it blank if you prefer.',
-        'Your experience helps future clients understand how Upturn works.',
-    ];
+    $testimonialReviewNotes = data_get($pageContent, 'testimonial_review_notes', []);
   @endphp
 
-  <section class="relative -mt-[72px] min-h-[100vh] overflow-hidden bg-[#07111f] text-white">
-    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+  <section class="relative overflow-hidden bg-black text-white" style="height: calc(100dvh - 72px); min-height: calc(100vh - 72px);">
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
       <video
-        class="absolute left-1/2 top-1/2 h-auto min-h-full min-w-full max-w-none -translate-x-1/2 -translate-y-1/2 object-cover"
+        class="absolute inset-0 m-auto block h-auto w-auto max-h-full max-w-full object-contain"
         autoplay
         muted
         loop
@@ -133,20 +39,17 @@
       </video>
     </div>
 
-    <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(7,17,31,0.88)_0%,rgba(12,20,36,0.72)_45%,rgba(17,82,212,0.3)_100%)]"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(17,82,212,0.22),transparent_34%)]"></div>
-
-    <div class="relative mx-auto flex min-h-[100vh] max-w-7xl items-center px-4 pb-20 pt-36 sm:px-6 sm:pt-40 lg:px-8 lg:pb-24 lg:pt-44">
+    <div class="relative mx-auto flex h-full max-w-7xl items-end px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
       <div class="relative z-10 max-w-3xl space-y-8 text-center lg:text-left">
         <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-sm">
           <span class="h-2 w-2 animate-pulse rounded-full bg-[#d4af37]"></span>
-          {{ $heroContent['label'] ?: 'Trusted By Local Businesses' }}
+          {{ $heroContent['label'] ?: 'COMPLY. SECURE. GROW.' }}
         </div>
         <h1 class="text-5xl font-black leading-[1.05] tracking-tight text-white drop-shadow-[0_14px_38px_rgba(7,17,31,0.42)] lg:text-6xl xl:text-7xl">
           {{ $heroContent['title'] ?: 'Building Secure and Tax-Compliant Businesses' }}
         </h1>
         <p class="max-w-2xl text-lg leading-relaxed text-slate-200 lg:text-xl">
-          {{ $heroContent['description'] ?: 'Empowering your enterprise with expert financial strategies, meticulous regulatory excellence, and forward-thinking growth solutions.' }}
+          {{ $heroContent['description'] ?: 'Your success is our priority. We provide tailored business solutions designed to keep you compliant, confident, and ready to grow.' }}
         </p>
         <div class="flex justify-center lg:justify-start">
           <a href="{{ $heroContent['primary_button_url'] ?: route('contact') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1152d4] px-8 py-4 text-base font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#0f48bc] hover:shadow-[0_18px_40px_rgba(17,82,212,0.35)]">
@@ -162,10 +65,10 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
         <div class="overflow-hidden rounded-[2rem] bg-[#0c1424] p-8 text-white shadow-2xl md:p-10">
-          <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">{{ $introContent['label'] ?: 'Trusted tax and accounting support' }}</p>
-          <h2 class="mt-5 text-4xl font-black leading-tight md:text-5xl">{{ $introContent['title'] ?: 'Looking for a Trustworthy Accountant?' }}</h2>
+          <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">{{ $introContent['label'] ?: 'Company Overview' }}</p>
+          <h2 class="mt-5 text-4xl font-black leading-tight md:text-5xl">{{ $introContent['title'] ?: 'Trusted accounting and taxation support in Valenzuela City' }}</h2>
           <p class="mt-5 max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
-            {{ $introContent['description'] ?: 'Work with a team that keeps your bookkeeping, tax compliance, and regulatory requirements organized so you can lead your business with confidence.' }}
+            {{ $introContent['description'] ?: 'Upturn Business Solutions is a Valenzuela City-based firm of Certified Public Accountants with over a decade of professional experience in accounting and taxation, helping clients stay compliant with BIR regulations and Philippine tax laws while reducing the risk of costly penalties.' }}
           </p>
           <div class="mt-8 grid gap-4 sm:grid-cols-3">
             @foreach ($trustSignals as $signal)
@@ -196,7 +99,8 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-3xl text-center">
         <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">Our Mission</p>
-        <h2 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">To simplify your accounting and tax compliance needs!</h2>
+        <h2 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Driving sustainable growth through trusted compliance support</h2>
+        <p class="mt-5 text-base leading-8 text-slate-600 md:text-lg">At Upturn Business Solutions, our mission is to be a trusted partner in driving sustainable growth, ensuring full tax compliance, and empowering business owners and professionals to achieve long-term success.</p>
       </div>
       <div class="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         @foreach ($missionHighlights as $highlight)
@@ -221,19 +125,19 @@
       <div class="grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">BIR and Tax Compliance Support</p>
-          <h2 class="mt-5 text-4xl font-black leading-tight md:text-5xl">Navigating BIR &amp; Tax compliance problems? We're here to help you!</h2>
+          <h2 class="mt-5 text-4xl font-black leading-tight md:text-5xl">Guidance for complex tax and compliance challenges</h2>
           <p class="mt-6 text-base leading-8 text-slate-300 md:text-lg">
-            We offer comprehensive bookkeeping, accounting, tax advisory, and tax preparation services for business owners, entrepreneurs, and professionals. Let us manage the complexities of Philippine tax compliance so you can focus on growing your business.
+            Upturn Business Solutions supports clients from transaction analysis to the accurate application and interpretation of tax regulations, helping reduce the risk of costly penalties and business disruption.
           </p>
           <p class="mt-5 text-base leading-8 text-slate-300">
-            Our firm is owned and operated by Certified Public Accountants duly accredited by the BOA (Board of Accountancy) and BIR (Bureau of Internal Revenue) to render high quality, reliable, and timely professional services at reasonable fees.
+            We also assist business owners during BIR audits by helping them navigate tax deficiencies through lawful compromises and available resolutions, with outcomes that can reduce liabilities from full assessments to far more manageable levels depending on the case.
           </p>
         </div>
 
         <div class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
-          <p class="text-sm font-bold uppercase tracking-[0.24em] text-[#d4af37]">What You Gain</p>
+          <p class="text-sm font-bold uppercase tracking-[0.24em] text-[#d4af37]">Accreditations and Registrations</p>
           <div class="mt-8 space-y-4">
-            @foreach ($complianceBenefits as $benefit)
+            @foreach ($accreditationBadges as $benefit)
               <div class="flex items-start gap-4 rounded-2xl border border-white/8 bg-white/5 px-4 py-4">
                 <span class="material-symbols-outlined mt-0.5 text-[#d4af37]">check_circle</span>
                 <div>
@@ -251,9 +155,9 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-3xl text-center">
         <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">Why Clients Choose Upturn</p>
-        <h2 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Service built on quality and professionalism</h2>
+        <h2 class="mt-4 text-4xl font-black text-slate-900 md:text-5xl">Trusted by businesses that value accuracy and reliability</h2>
       </div>
-      <div class="mt-14 grid gap-8 lg:grid-cols-2">
+      <div class="mt-14 grid gap-8 lg:grid-cols-3">
         @foreach ($servicePrinciples as $principle)
           <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-lg">
             <div class="h-2 bg-gradient-to-r from-[#1152d4] via-[#1d4ed8] to-[#d4af37]"></div>
@@ -270,12 +174,47 @@
     </div>
   </section>
 
+  <section class="bg-[#0c2b5e] py-24 text-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl text-center">
+        <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">Stats and Social Proof</p>
+        <h2 class="mt-4 text-4xl font-black md:text-5xl">Trusted by businesses across industries</h2>
+        <p class="mt-5 text-base leading-8 text-slate-200 md:text-lg">Our work is built on long-term client relationships, successful compliance support, and a growing team of professionals committed to service excellence.</p>
+      </div>
+
+      <div class="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        @foreach ($featuredStats as $stat)
+          <div class="rounded-[1.75rem] border border-white/10 bg-white/5 p-8 text-center shadow-lg backdrop-blur-sm">
+            <p class="text-4xl font-black text-white md:text-5xl">{{ $stat['value'] }}</p>
+            <p class="mt-3 text-sm font-bold uppercase tracking-[0.24em] text-[#d4af37]">{{ $stat['label'] }}</p>
+          </div>
+        @endforeach
+      </div>
+
+      <div class="mt-14 rounded-[2rem] border border-white/10 bg-white/5 p-8 md:p-10">
+        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.28em] text-[#d4af37]">Trusted By</p>
+            <h3 class="mt-3 text-3xl font-black text-white">Businesses and organizations we have supported</h3>
+          </div>
+          <p class="max-w-2xl text-sm leading-7 text-slate-200 md:text-right">A selection of companies named in the Upturn company profile, representing the range of industries we have worked with over the years.</p>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          @foreach ($featuredClients as $client)
+            <span class="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white">{{ $client }}</span>
+          @endforeach
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="bg-white py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="mx-auto mb-16 max-w-3xl space-y-4 text-center">
-        <h2 class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">Our Expertise</h2>
-        <h3 class="text-4xl font-bold text-slate-900">Services Published from the Admin Panel</h3>
-        <p class="text-slate-600">The cards below are powered by your live service records, so updates in the admin panel immediately shape the public experience.</p>
+        <h2 class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">Our Services</h2>
+        <h3 class="text-4xl font-bold text-slate-900">Solutions designed to keep your business compliant and moving forward</h3>
+        <p class="text-slate-600">Explore Upturn services for one-time engagements, monthly compliance support, annual audit requirements, and workspace solutions for growing businesses.</p>
       </div>
       <div class="grid gap-8 md:grid-cols-3">
         @forelse ($services as $service)
@@ -294,8 +233,8 @@
           </div>
         @empty
           <div class="md:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
-            <h4 class="text-xl font-bold text-slate-900">No services are published yet.</h4>
-            <p class="mt-3 text-slate-600">Add services from the admin panel and they will appear here automatically.</p>
+            <h4 class="text-xl font-bold text-slate-900">Our service lineup will be published here soon.</h4>
+            <p class="mt-3 text-slate-600">For immediate assistance, contact our team and we will guide you to the right service.</p>
           </div>
         @endforelse
       </div>
@@ -347,8 +286,8 @@
           @endif
         @empty
           <div class="md:col-span-2 xl:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
-            <h4 class="text-xl font-bold text-slate-900">No published posts yet.</h4>
-            <p class="mt-3 text-slate-600">Once you publish announcements or updates in the CMS, they will appear here.</p>
+            <h4 class="text-xl font-bold text-slate-900">No updates are available right now.</h4>
+            <p class="mt-3 text-slate-600">Please check back soon for announcements, insights, and company updates.</p>
           </div>
         @endforelse
       </div>
@@ -404,8 +343,8 @@
       <div class="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div class="max-w-2xl space-y-4">
           <h2 class="text-sm font-bold uppercase tracking-widest text-[#d4af37]">Current Openings</h2>
-          <h3 class="text-4xl font-bold text-slate-900">Hiring needs from the HR backend</h3>
-          <p class="text-slate-600">Open roles published by HR appear here automatically, giving applicants a straight path from discovery to application.</p>
+          <h3 class="text-4xl font-bold text-slate-900">Opportunities to grow with the Upturn team</h3>
+          <p class="text-slate-600">Explore current roles for professionals who want to work in an environment shaped by integrity, excellence, teamwork, and client impact.</p>
         </div>
         <a href="{{ route('careers') }}" class="inline-flex items-center gap-2 font-bold text-[#1152d4]">
           View all careers <span class="material-symbols-outlined text-sm">arrow_forward</span>
@@ -427,8 +366,8 @@
           </a>
         @empty
           <div class="lg:col-span-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-8 py-12 text-center">
-            <h4 class="text-xl font-bold text-slate-900">No open roles are published yet.</h4>
-            <p class="mt-3 text-slate-600">Publish a job posting from the HR panel and it will show up here automatically.</p>
+            <h4 class="text-xl font-bold text-slate-900">There are no open roles at the moment.</h4>
+            <p class="mt-3 text-slate-600">Please check back soon for future opportunities with the Upturn team.</p>
           </div>
         @endforelse
       </div>

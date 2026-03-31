@@ -4,14 +4,16 @@
   $showSocials = $showSocials ?? true;
   $showQuickLinks = $showQuickLinks ?? true;
   $showContact = $showContact ?? true;
-  $tagline = $tagline ?? "Providing reliable financial, administrative, and compliance services to help Philippine enterprises thrive in today's competitive landscape.";
+  $tagline = $tagline ?? 'COMPLY. SECURE. GROW.';
   $companyProfile = $companyProfile ?? config('upturn.company', []);
   $companyName = data_get($companyProfile, 'name', 'Upturn Business Solutions');
   $contactProfile = data_get($companyProfile, 'contact', []);
   $socialLinks = data_get($companyProfile, 'socials', []);
   $contactAddress = data_get($contactProfile, 'address', 'Unit 201-202, C&B Circle Mall, Maysan Road, Malinta, Valenzuela City');
   $contactPhone = data_get($contactProfile, 'phone', '+63 921 551 4785');
+  $contactPhones = data_get($contactProfile, 'phones', ['Phone' => $contactPhone]);
   $contactEmail = data_get($contactProfile, 'email', 'sales@upturnpartnership.com');
+  $contactEmails = data_get($contactProfile, 'emails', ['Email' => $contactEmail]);
   $officeHoursSummary = data_get($contactProfile, 'office_hours.summary', 'Mon-Fri 8AM-5PM');
   $footerLinks = $links ?? [
     ['label' => 'Home', 'route' => 'home'],
@@ -81,12 +83,18 @@
             <li class="flex items-start gap-3">
               <span class="material-symbols-outlined mt-0.5 text-base text-[#1152d4]">call</span>
               <div class="flex flex-col gap-1">
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $contactPhone) }}" class="transition-colors hover:text-white">{{ $contactPhone }}</a>
+                @foreach ($contactPhones as $label => $phone)
+                  <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="transition-colors hover:text-white">{{ is_string($label) ? $label.': ' : '' }}{{ $phone }}</a>
+                @endforeach
               </div>
             </li>
-            <li class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-base text-[#1152d4]">mail</span>
-              <a href="mailto:{{ $contactEmail }}" class="transition-colors hover:text-white">{{ $contactEmail }}</a>
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined mt-0.5 text-base text-[#1152d4]">mail</span>
+              <div class="flex flex-col gap-1">
+                @foreach ($contactEmails as $label => $email)
+                  <a href="mailto:{{ $email }}" class="transition-colors hover:text-white">{{ is_string($label) ? $label.': ' : '' }}{{ $email }}</a>
+                @endforeach
+              </div>
             </li>
             <li class="flex items-center gap-3">
               <span class="material-symbols-outlined text-base text-[#1152d4]">schedule</span>
@@ -98,7 +106,7 @@
     </div>
 
     <div class="flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-xs sm:flex-row">
-      <p>&copy; {{ date('Y') }} Craig Eminem Lamsen. All rights reserved.</p>
+      <p>&copy; {{ date('Y') }} Upturn Business Solutions. All rights reserved.</p>
       <div class="flex gap-6">
         <a href="#" class="transition-colors hover:text-white">Privacy Policy</a>
         <a href="#" class="transition-colors hover:text-white">Terms of Service</a>

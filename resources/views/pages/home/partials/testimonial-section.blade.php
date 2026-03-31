@@ -57,7 +57,7 @@
     @else
       <div class="rounded-3xl border border-dashed border-slate-300 bg-white/80 px-8 py-12 text-center shadow-sm">
         <h4 class="text-xl font-bold text-slate-900">No featured testimonials yet.</h4>
-        <p class="mt-3 text-slate-600">Mark testimonials as approved in the admin panel to publish them on the homepage.</p>
+        <p class="mt-3 text-slate-600">Client stories and testimonials will be featured here soon.</p>
       </div>
     @endif
   </div>

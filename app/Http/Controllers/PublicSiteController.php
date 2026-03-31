@@ -19,6 +19,7 @@ class PublicSiteController extends Controller
     {
         return view('pages.home', [
             'pageSections' => $this->pageSections('home'),
+            'pageContent' => $this->pageContent('home'),
             'services' => $this->transformServices(Service::active()->take(3)->get()),
             'testimonials' => $this->transformTestimonials(Testimonial::featured()->get()),
             'posts' => $this->transformPosts(Post::published()->latest('published_at')->take(9)->get()),
@@ -37,6 +38,7 @@ class PublicSiteController extends Controller
     {
         return view('pages.about', [
             'pageSections' => $this->pageSections('about'),
+            'pageContent' => $this->pageContent('about'),
         ]);
     }
 
@@ -218,6 +220,13 @@ class PublicSiteController extends Controller
         $sections = config("upturn.page_sections.{$page}", []);
 
         return is_array($sections) ? $sections : [];
+    }
+
+    private function pageContent(string $page): array
+    {
+        $content = config("upturn.page_content.{$page}", []);
+
+        return is_array($content) ? $content : [];
     }
 
     private function publicImageUrl(?string $path): ?string
