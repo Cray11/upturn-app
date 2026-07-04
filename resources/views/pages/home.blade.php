@@ -52,9 +52,9 @@
           aria-hidden="{{ $index === 0 ? 'false' : 'true' }}"
         >
           @if ($slide['type'] === 'video')
-            <div class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+            <div class="pointer-events-none absolute inset-0 overflow-hidden">
               <video
-                class="absolute inset-0 m-auto block h-auto w-auto max-h-full max-w-full object-contain"
+                class="absolute inset-0 h-full w-full object-cover"
                 autoplay
                 muted
                 loop

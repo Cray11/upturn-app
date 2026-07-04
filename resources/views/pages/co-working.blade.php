@@ -12,7 +12,7 @@
       <div class="order-2 flex flex-col gap-6 lg:order-1">
         <span class="inline-flex items-center rounded-full bg-[#D4AF37]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#D4AF37]">{{ $heroContent['label'] ?: 'Premium Workspaces' }}</span>
         <h1 class="text-3xl font-black leading-tight text-slate-900 sm:text-4xl lg:text-6xl">
-          {{ $heroContent['title'] ?: 'Modern Co-working Space' }}
+          {{ $heroContent['title'] ?: 'Modern Co-working Space' }}  
         </h1>
         <p class="max-w-lg text-lg leading-relaxed text-slate-600">{{ $heroContent['description'] ?: 'Elevate your productivity in our high-fidelity professional environments designed for business growth and collaborative success.' }}</p>
         <div class="flex gap-4">
