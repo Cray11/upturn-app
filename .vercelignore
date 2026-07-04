@@ -1,0 +1,8 @@
+node_modules
+vendor
+.git
+*.md
+.env
+.env.*
+tests
+docs
